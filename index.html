@@ -65,9 +65,7 @@ html,body{font-family:var(--font);background:var(--gray-50);color:var(--gray-900
 .cal-master{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--gray-200);border-radius:var(--radius-md);overflow:hidden;min-width:700px}
 .cal-dow{text-align:center;padding:8px 4px;font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;background:var(--white)}
 .cal-dow.weekend{color:var(--brand)}
-.cal-grid-header{display:none}
 .cal-body{display:contents}
-.cal-body.multi-view{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;background:transparent;border-radius:0}
 .cal-day{background:var(--white);padding:6px;min-height:110px;position:relative;transition:background .1s;cursor:default;overflow:visible}
 .cal-day:hover{background:#FAFBFF}
 .cal-day.other-month{background:var(--gray-50)}
@@ -81,17 +79,12 @@ html,body{font-family:var(--font);background:var(--gray-50);color:var(--gray-900
 .event-card .ev-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:3px}
 .event-card .ev-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
 .ev-tag{font-size:8px;opacity:.75;margin-left:3px;flex-shrink:0;white-space:nowrap}
-.ev-alta{background:#FDECEA;color:#C0392B}.ev-alta .ev-dot{background:#C0392B}
-.ev-media{background:#FFF4E0;color:#B86A00}.ev-media .ev-dot{background:#F59E0B}
-.ev-baixa{background:#E6F5EF;color:#1A8F5E}.ev-baixa .ev-dot{background:#1A8F5E}
-.ev-default{background:var(--brand-light);color:var(--brand)}.ev-default .ev-dot{background:var(--brand)}
-.more-events{font-size:10px;color:var(--gray-500);cursor:pointer;padding:1px 4px;border-radius:3px}
-.more-events:hover{background:var(--gray-100);color:var(--gray-700)}
 .ev-confirmado{background:#EEEDFE;color:#2B3A8C}
 .ev-tbd{background:#F0F2F7;color:#8892A4;font-style:italic;opacity:.85;border-left:2px solid #C8CEDC}
 .ev-andamento{background:#E6F5EF;color:#1A8F5E}
-.ev-iniciar{background:#FFF4E0;color:#B86A00}
 .nat-star{font-size:9px;margin-left:2px}
+.more-events{font-size:10px;color:var(--gray-500);cursor:pointer;padding:1px 4px;border-radius:3px}
+.more-events:hover{background:var(--gray-100);color:var(--gray-700)}
 .tbd-panel{background:var(--white);border-top:1px solid var(--gray-200);padding:12px 24px}
 .tbd-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer}
 .tbd-title{font-size:12px;font-weight:700;color:var(--gray-700)}
@@ -127,10 +120,6 @@ html,body{font-family:var(--font);background:var(--gray-50);color:var(--gray-900
 .detail-label{font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
 .detail-value{font-size:13px;color:var(--gray-900);font-weight:500}
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.priority-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700}
-.badge-alta{background:var(--danger-bg);color:var(--danger)}
-.badge-media{background:var(--warning-bg);color:var(--warning)}
-.badge-baixa{background:var(--success-bg);color:var(--success)}
 .fg{margin-bottom:14px}
 .fl{font-size:12px;font-weight:600;color:var(--gray-700);margin-bottom:5px;display:block}
 .fl em{color:var(--danger);font-style:normal}
@@ -252,7 +241,7 @@ html,body{font-family:var(--font);background:var(--gray-50);color:var(--gray-900
       <button class="nav-btn" onclick="changeMonth(-1)">
         <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M6 1L1 6l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      <span class="month-display" id="monthLabel">Abril 2026</span>
+      <span class="month-display" id="monthLabel">Junho 2026</span>
       <button class="nav-btn" onclick="changeMonth(1)">
         <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
@@ -304,6 +293,7 @@ html,body{font-family:var(--font);background:var(--gray-50);color:var(--gray-900
   <div class="tbd-grid" id="tbdGrid"></div>
 </div>
 
+<!-- Modal Adicionar/Editar -->
 <div class="overlay" id="addOverlay" onclick="overlayClick(event,'addOverlay')">
   <div class="modal">
     <div class="modal-header">
@@ -409,6 +399,7 @@ html,body{font-family:var(--font);background:var(--gray-50);color:var(--gray-900
   </div>
 </div>
 
+<!-- Modal Detalhe -->
 <div class="overlay" id="detailOverlay" onclick="overlayClick(event,'detailOverlay')">
   <div class="modal">
     <div class="modal-header">
@@ -468,227 +459,124 @@ html,body{font-family:var(--font);background:var(--gray-50);color:var(--gray-900
 <div class="toast" id="toast"></div>
 
 <script>
+// ══════════════════════════════════════════════════════════════
+// ⚙️  CONFIGURAÇÃO — cole aqui a URL do seu Apps Script
+// ══════════════════════════════════════════════════════════════
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbx3Cdc3Std7RWyXB2arTrb6i9dTwVxkT95bzIilVXPORuwgyNpSo_72YYn0KHzcDU4J/exec';
+// ══════════════════════════════════════════════════════════════
+
 var MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-var curM=3,curY=2026,nid=200,editId=null,detailId=null;
+var curM=5, curY=2026, nid=200, editId=null, detailId=null;
+var _saving=false;
+var events=[];
 
-// ── SUPABASE CONFIG ───────────────────────────────────────────────────────────
-var SB_URL = 'https://gwzumvcydqbjwkcidlnp.supabase.co';
-var SB_KEY = 'sb_publishable_cqxBfs_IhRqSqvw8clBkZg_eD9hXTFL';
-var _saving = false;
-
-function sbHeaders(){
-  return {
-    'Content-Type': 'application/json',
-    'apikey': SB_KEY,
-    'Authorization': 'Bearer ' + SB_KEY,
-    'Prefer': 'return=minimal'
-  };
+// ── API ──────────────────────────────────────────────────────
+function gasGet(action, params){
+  var url = GAS_URL + '?action=' + action;
+  if(params) Object.keys(params).forEach(function(k){ url += '&'+k+'='+encodeURIComponent(params[k]); });
+  return fetch(url).then(function(r){ return r.json(); });
+}
+function gasPost(action, body){
+  return fetch(GAS_URL + '?action=' + action, {
+    method: 'POST',
+    body: JSON.stringify(body)
+  }).then(function(r){ return r.json(); });
 }
 
-// ── HELPERS DE PRESENÇA NAT ──────────────────────────────────────────────────
-// nat agora é string: "Sim" | "A confirmar" | "Não"
+function loadEvents(cb){
+  gasGet('list')
+    .then(function(res){
+      if(res && res.events){
+        events = res.events.map(rowToEv);
+        nid = events.length ? Math.max.apply(null, events.map(function(e){ return Number(e.id)||0 })) + 1 : 200;
+      }
+      if(cb) cb();
+    })
+    .catch(function(e){
+      console.error(e);
+      showToast('Erro ao carregar. Verifique a URL do Apps Script.');
+      if(cb) cb();
+    });
+}
+
+function saveToGAS(msg, evObj, cb){
+  if(_saving){ showToast('Aguarde...'); return; }
+  _saving=true;
+  showToast('Salvando...');
+  gasPost('upsert', evToRow(evObj))
+    .then(function(res){
+      _saving=false;
+      if(res && !res.error){ showToast(msg || 'Salvo! ✓'); }
+      else { showToast('Erro: ' + (res&&res.error||'desconhecido')); }
+      if(cb) cb();
+    })
+    .catch(function(e){
+      _saving=false;
+      showToast('Erro: ' + e.message);
+      if(cb) cb();
+    });
+}
+
+function deleteFromGAS(id){
+  gasGet('delete', {id: id})
+    .then(function(res){
+      if(res && !res.error) showToast('Evento excluído. ✓');
+      else showToast('Erro ao excluir.');
+    })
+    .catch(function(e){ showToast('Erro: ' + e.message); });
+}
+
+// ── CONVERSÃO ─────────────────────────────────────────────────
 function natLabel(nat){
   if(nat==='Sim') return '⭐ Sim';
   if(nat==='A confirmar') return 'A confirmar';
   return 'Não';
 }
-function natIcon(nat){
-  if(nat==='Sim') return ' ⭐';
+function natIcon(nat){ return nat==='Sim'?' ⭐':''; }
 
-  return '';
-}
-// Codifica nat para o banco (coluna boolean):
-// "Sim" → true | "A confirmar" → null | "Não" → false
-function natToDB(nat){
-  if(nat==='Sim') return true;
-  if(nat==='A confirmar') return null;
-  return false;
-}
-// Decodifica nat do banco para string
-function natFromDB(dbVal){
-  if(dbVal===true) return 'Sim';
-  if(dbVal===null || dbVal===undefined) return 'A confirmar';
-  return 'Não';
-}
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Converte evento JS → linha do banco
 function evToRow(e){
   return {
-    id: e.id,
-    nome: e.nome||'',
-    proj: e.proj||'',
-    area: e.area||'',
-    publico: e.publico||'',
-    cat: e.cat||'',
-    ini: e.ini||'',
-    fim: e.fim||'',
-    hi: e.hi||'',
-    hf: e.hf||'',
-    local: e.local||'',
-    descricao: e.desc||'',
-    pri: e.pri||'',
-    status: e.status||'',
-    nat: natToDB(e.nat),
-    no_date: !!e.noDate,
-    demanda: e.demanda||'',
-    mes: e.mes||'',
-    sem: e.sem||''
+    id:e.id, nome:e.nome||'', proj:e.proj||'', area:e.area||'',
+    publico:e.publico||'', cat:e.cat||'', ini:e.ini||'', fim:e.fim||'',
+    hi:e.hi||'', hf:e.hf||'', local:e.local||'', descricao:e.desc||'',
+    pri:e.pri||'', status:e.status||'',
+    nat: e.nat||'Não',
+    no_date: e.noDate ? 'TRUE' : 'FALSE',
+    demanda:e.demanda||'', mes:e.mes||'', sem:e.sem||''
   };
 }
 
-// Converte linha do banco → evento JS
 function rowToEv(r){
+  var noDate = r.no_date===true || r.no_date==='TRUE' || r.no_date==='true';
+  var nat = r.nat;
+  // compatibilidade com boolean antigo do Supabase
+  if(nat===true) nat='Sim';
+  else if(nat===false || nat===null || nat===undefined) nat='Não';
   return {
-    id: r.id,
-    nome: r.nome||'',
-    proj: r.proj||'',
-    area: r.area||'',
-    publico: r.publico||'',
-    cat: r.cat||'',
-    ini: r.ini||'',
-    fim: r.fim||'',
-    hi: r.hi||'',
-    hf: r.hf||'',
-    local: r.local||'',
-    desc: r.descricao||'',
-    pri: r.pri||'',
-    status: r.status||'',
-    nat: natFromDB(r.nat),
-    noDate: !!r.no_date,
-    demanda: r.demanda||'',
-    mes: r.mes||'',
-    sem: r.sem||''
+    id:Number(r.id)||0, nome:r.nome||'', proj:r.proj||'', area:r.area||'',
+    publico:r.publico||'', cat:r.cat||'', ini:r.ini||'', fim:r.fim||'',
+    hi:r.hi||'', hf:r.hf||'', local:r.local||'',
+    desc:r.descricao||'', pri:r.pri||'', status:r.status||'',
+    nat:nat, noDate:noDate, demanda:r.demanda||'', mes:r.mes||'', sem:r.sem||''
   };
 }
 
-// Carrega todos os eventos da tabela individual
-function loadEventsFromGitHub(cb){
-  fetch(SB_URL + '/rest/v1/calendar_events?order=id', { headers: sbHeaders() })
-    .then(function(r){ return r.json(); })
-    .then(function(rows){
-      if(rows && Array.isArray(rows) && rows.length > 0){
-        events = rows.map(rowToEv);
-        nid = Math.max.apply(null, events.map(function(e){ return e.id||0 })) + 1;
-      }
-      if(cb) cb();
-    })
-    .catch(function(e){
-      console.error('Erro ao carregar eventos:', e);
-      showToast('Erro ao carregar. Usando dados locais.');
-      if(cb) cb();
-    });
-}
-
-// Sincroniza a tabela events (blob) para o agente Copilot
-function syncEventsBlob(){
-  var blob = events.map(function(e){
-    return {
-      id: e.id, nome: e.nome, proj: e.proj||'', area: e.area,
-      publico: e.publico, cat: e.cat, ini: e.ini, fim: e.fim,
-      hi: e.hi||'', hf: e.hf||'', local: e.local||'', desc: e.desc||'',
-      pri: e.pri, status: e.status, nat: e.nat, noDate: e.noDate,
-      demanda: e.demanda||'', mes: e.mes||'', sem: e.sem||''
-    };
-  });
-  fetch(SB_URL + '/rest/v1/events?id=eq.1', {
-    method: 'PATCH',
-    headers: Object.assign({}, sbHeaders(), { 'Prefer': 'return=minimal' }),
-    body: JSON.stringify({ data: blob })
-  }).catch(function(e){ console.error('Erro ao sincronizar blob:', e); });
-}
-
-// Salva UM evento na calendar_events E sincroniza o blob da events
-function saveEventsToGitHub(msg, evObj){
-  if(_saving){ showToast('Aguarde...'); return; }
-  _saving = true;
-  showToast('Salvando...');
-  var row = evToRow(evObj);
-  fetch(SB_URL + '/rest/v1/calendar_events', {
-    method: 'POST',
-    headers: Object.assign({}, sbHeaders(), { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
-    body: JSON.stringify(row)
-  })
-  .then(function(r){
-    _saving = false;
-    if(r.ok){
-      showToast(msg || 'Salvo! ✓');
-      syncEventsBlob();
-    } else {
-      r.text().then(function(t){ showToast('Erro ao salvar: ' + t); });
-    }
-    renderCalendar();
-  })
-  .catch(function(e){
-    _saving = false;
-    showToast('Erro: ' + e.message);
-    renderCalendar();
-  });
-}
-
-// Deleta UM evento da calendar_events E sincroniza o blob da events
-function deleteEventFromDB(id){
-  fetch(SB_URL + '/rest/v1/calendar_events?id=eq.' + id, {
-    method: 'DELETE',
-    headers: sbHeaders()
-  })
-  .then(function(r){
-    if(r.ok){
-      showToast('Evento excluído. ✓');
-      syncEventsBlob();
-    } else {
-      r.text().then(function(t){ showToast('Erro ao excluir: ' + t); });
-    }
-  })
-  .catch(function(e){ showToast('Erro: ' + e.message); });
-}
-// ─────────────────────────────────────────────────────────────────────────────
-
-var events = [];
-
+// ── HELPERS ───────────────────────────────────────────────────
 function p2(n){return String(n).padStart(2,'0')}
 function toStr(y,m,d){return y+'-'+p2(m+1)+'-'+p2(d)}
 function fmtDate(s){if(!s)return '—';var p=s.split('-');return p[2]+'/'+p[1]+'/'+p[0]}
 function todayStr(){var t=new Date();return toStr(t.getFullYear(),t.getMonth(),t.getDate())}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function statusClass(e){
-  if(e.noDate) return 'ev-tbd';
-  var s=e.status||'';
-  if(s==='TBD') return 'ev-tbd';
-  if(s==='Em andamento') return 'ev-andamento';
+  if(e.noDate||e.status==='TBD') return 'ev-tbd';
+  if(e.status==='Em andamento') return 'ev-andamento';
   return 'ev-confirmado';
 }
 
-function renderTbdPanel(){
-  var tbd=events.filter(function(e){return e.noDate});
-  document.getElementById('tbdCount').textContent=tbd.length;
-  var MONTHS_SHORT=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  var html='';
-  tbd.forEach(function(ev){
-    var mIdx=parseInt((ev.ini||'2026-01').split('-')[1])-1;
-    html+='<div class="tbd-chip" onclick="openDetail('+ev.id+')">';
-    html+=esc(ev.nome);
-    html+='<span class="tbd-month">'+MONTHS_SHORT[mIdx]+'</span>';
-    if(ev.nat==='Sim') html+='<span class="nat-star">⭐</span>';
-
-    html+='</div>';
-  });
-  document.getElementById('tbdGrid').innerHTML=html||'<span style="font-size:12px;color:var(--gray-500)">Nenhum evento sem data.</span>';
-}
-
-var tbdOpen=true;
-function toggleTbd(){
-  tbdOpen=!tbdOpen;
-  document.getElementById('tbdPanel').className='tbd-panel'+(tbdOpen?'':' tbd-collapsed');
-  document.getElementById('tbdArrow').style.transform=tbdOpen?'':'rotate(-90deg)';
-}
-
-function clearFilters(){
-  ['filterArea','filterPublico','filterTipo','filterStatus','filterNat','filterDemanda'].forEach(function(id){
-    document.getElementById(id).value='';
-  });
-  document.getElementById('clearFiltersBtn').style.display='none';
-  renderCalendar();
+function nextBusinessDay(y,m){
+  var d=new Date(y,m,1);
+  while(d.getDay()===0||d.getDay()===6) d.setDate(d.getDate()+1);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 
 function getFiltered(){
@@ -713,12 +601,6 @@ function getFiltered(){
   });
 }
 
-function nextBusinessDay(y,m){
-  var d=new Date(y,m,1);
-  while(d.getDay()===0||d.getDay()===6) d.setDate(d.getDate()+1);
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-}
-
 function eventsForDay(dayStr){
   return getFiltered().filter(function(e){
     if(e.noDate){
@@ -731,6 +613,23 @@ function eventsForDay(dayStr){
   });
 }
 
+function eventsForDay2(y,m){
+  var ym=y+'-'+p2(m+1);
+  return getFiltered().filter(function(e){return (e.ini||'').startsWith(ym)||(e.fim&&e.fim.startsWith(ym))});
+}
+
+function clearFilters(){
+  ['filterArea','filterPublico','filterTipo','filterStatus','filterNat','filterDemanda'].forEach(function(id){
+    document.getElementById(id).value='';
+  });
+  document.getElementById('clearFiltersBtn').style.display='none';
+  renderCalendar();
+}
+
+// ── NAVEGAÇÃO ─────────────────────────────────────────────────
+var curView='mes';
+var curWeekStart=(function(){var d=new Date();d.setDate(d.getDate()-d.getDay());return d})();
+
 function changeMonth(d){
   if(curView==='semana'){curWeekStart=new Date(curWeekStart);curWeekStart.setDate(curWeekStart.getDate()+d*7);}
   else if(curView==='trimestre'){curM+=d*3;while(curM>11){curM-=12;curY++}while(curM<0){curM+=12;curY--}}
@@ -739,9 +638,6 @@ function changeMonth(d){
   else{curM+=d;if(curM<0){curM=11;curY--}if(curM>11){curM=0;curY++}}
   renderCalendar();
 }
-
-var curView='mes';
-var curWeekStart=(function(){var d=new Date();d.setDate(d.getDate()-d.getDay());return d})();
 
 function setView(v,btn){
   document.querySelectorAll('.toggle-btn').forEach(function(b){b.className='toggle-btn'});
@@ -759,6 +655,7 @@ function renderCalendar(){
   renderMonth();
 }
 
+// ── RENDER MÊS ────────────────────────────────────────────────
 function renderMonth(){
   var master=document.getElementById('calMaster');
   var dw=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
@@ -767,7 +664,6 @@ function renderMonth(){
     c.textContent=dw[i];c.style.display='';
     c.className='cal-dow'+(i===0||i===6?' weekend':'');
   });
-  master.className='cal-master';
   master.style.gridTemplateColumns='repeat(7,minmax(0,1fr))';
   master.style.background='var(--gray-200)';
   master.style.borderRadius='var(--radius-md)';
@@ -806,9 +702,9 @@ function renderMonth(){
   renderTbdPanel();
 }
 
+// ── RENDER SEMANA ─────────────────────────────────────────────
 function renderWeek(){
   var master=document.getElementById('calMaster');
-  master.className='cal-master';
   master.style.gridTemplateColumns='repeat(7,minmax(0,1fr))';
   master.style.background='var(--gray-200)';
   master.style.borderRadius='var(--radius-md)';
@@ -846,11 +742,11 @@ function renderWeek(){
   renderTbdPanel();
 }
 
+// ── RENDER MULTI-MÊS ──────────────────────────────────────────
 function renderMultiMonth(count){
   var master=document.getElementById('calMaster');
   master.querySelectorAll('.cal-dow').forEach(function(c){c.style.display='none'});
   var cols=count===12?4:3;
-  master.className='cal-master';
   master.style.gridTemplateColumns='repeat('+cols+',minmax(0,1fr))';
   master.style.background='transparent';
   master.style.borderRadius='0';
@@ -905,18 +801,36 @@ function renderMultiMonth(count){
   renderTbdPanel();
 }
 
-function eventsForDay2(y,m){
-  var ym=y+'-'+p2(m+1);
-  return getFiltered().filter(function(e){return (e.ini||'').startsWith(ym)||(e.fim&&e.fim.startsWith(ym))});
+// ── TBD PANEL ─────────────────────────────────────────────────
+function renderTbdPanel(){
+  var tbd=events.filter(function(e){return e.noDate});
+  document.getElementById('tbdCount').textContent=tbd.length;
+  var MS=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  var html='';
+  tbd.forEach(function(ev){
+    var mIdx=parseInt((ev.ini||'2026-01').split('-')[1])-1;
+    html+='<div class="tbd-chip" onclick="openDetail('+ev.id+')">'+esc(ev.nome);
+    html+='<span class="tbd-month">'+MS[mIdx]+'</span>';
+    if(ev.nat==='Sim') html+='<span class="nat-star">⭐</span>';
+    html+='</div>';
+  });
+  document.getElementById('tbdGrid').innerHTML=html||'<span style="font-size:12px;color:var(--gray-500)">Nenhum evento sem data.</span>';
 }
 
+var tbdOpen=true;
+function toggleTbd(){
+  tbdOpen=!tbdOpen;
+  document.getElementById('tbdPanel').className='tbd-panel'+(tbdOpen?'':' tbd-collapsed');
+  document.getElementById('tbdArrow').style.transform=tbdOpen?'':'rotate(-90deg)';
+}
+
+// ── MODAIS ────────────────────────────────────────────────────
 function openDetail(id){
   var ev=events.find(function(x){return x.id===id});if(!ev)return;
   detailId=id;
   document.getElementById('confirmDel').className='confirm-strip';
   document.getElementById('detailTitle').textContent=ev.nome;
-  // Ícone Nat no subtítulo apenas se Sim ou A confirmar
-  var natSuffix = ev.nat==='Sim' ? ' ⭐' : '';
+  var natSuffix=ev.nat==='Sim'?' ⭐':'';
   document.getElementById('detailSubtitle').textContent=(ev.cat||'Sem tipo')+' • '+(ev.area||'—')+natSuffix;
   document.getElementById('d-area').textContent=ev.area||'—';
   document.getElementById('d-publico').textContent=ev.publico||'—';
@@ -924,26 +838,24 @@ function openDetail(id){
   var data=ev.noDate?'A definir':fmtDate(ev.ini);
   if(!ev.noDate&&ev.fim&&ev.fim!==ev.ini)data+=' → '+fmtDate(ev.fim);
   document.getElementById('d-data').textContent=data;
-  var statusColors={'Confirmado':'color:#2B3A8C;background:#EEEDFE','TBD':'color:#8892A4;background:#F0F2F7','Em andamento':'color:#1A8F5E;background:#E6F5EF'};
-  var sc=statusColors[ev.status||'']||'color:#666;background:#f0f0f0';
-  document.getElementById('d-status').innerHTML='<span style="padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;'+sc+'">'+(ev.status||'—')+'</span>';
-  // Presença Nat com badge colorido
-  var natColors={'Sim':'color:#1A8F5E;background:#E6F5EF','A confirmar':'color:#B86A00;background:#FFF4E0','Não':'color:#8892A4;background:#F0F2F7'};
-  var nc=natColors[ev.nat]||natColors['Não'];
-  document.getElementById('d-nat').innerHTML='<span style="padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;'+nc+'">'+natLabel(ev.nat)+'</span>';
+  var sc={'Confirmado':'color:#2B3A8C;background:#EEEDFE','TBD':'color:#8892A4;background:#F0F2F7','Em andamento':'color:#1A8F5E;background:#E6F5EF'};
+  var s=sc[ev.status||'']||'color:#666;background:#f0f0f0';
+  document.getElementById('d-status').innerHTML='<span style="padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;'+s+'">'+(ev.status||'—')+'</span>';
+  var nc={'Sim':'color:#1A8F5E;background:#E6F5EF','A confirmar':'color:#B86A00;background:#FFF4E0','Não':'color:#8892A4;background:#F0F2F7'};
+  var n=nc[ev.nat]||nc['Não'];
+  document.getElementById('d-nat').innerHTML='<span style="padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;'+n+'">'+natLabel(ev.nat)+'</span>';
   document.getElementById('d-mes').textContent=(ev.mes||'—')+(ev.sem?' · '+ev.sem:'');
   document.getElementById('d-demanda').textContent=ev.demanda||'—';
   document.getElementById('d-desc').textContent=ev.desc||'—';
   document.getElementById('detailOverlay').className='overlay open';
 }
-
 function closeDetailModal(){document.getElementById('detailOverlay').className='overlay';detailId=null}
 
 function deleteEvent(){
   var id=detailId;
   events=events.filter(function(e){return e.id!==id});
   closeDetailModal();
-  deleteEventFromDB(id);
+  deleteFromGAS(id);
   renderCalendar();
 }
 
@@ -981,21 +893,21 @@ function duplicateEvent(){
   var ev=events.find(function(x){return x.id===detailId});if(!ev)return;
   editId=null;
   closeDetailModal();
-  document.getElementById("addModalTitle").textContent="Duplicar Evento";
-  document.getElementById("f-nome").value=ev.nome||"";
-  document.getElementById("f-mes").value=ev.mes||"";
-  document.getElementById("f-sem").value=ev.sem||"";
-  document.getElementById("f-ini").value="";
-  document.getElementById("f-fim").value="";
-  document.getElementById("f-cat").value=ev.cat||"";
-  document.getElementById("f-publico").value=ev.publico||"";
-  document.getElementById("f-area").value=ev.area||"";
-  document.getElementById("f-nat").value=ev.nat||"Não";
-  document.getElementById("f-status").value=ev.status||"";
-  document.getElementById("f-demanda").value=ev.demanda||"";
-  document.getElementById("f-desc").value=ev.desc||"";
-  document.getElementById("addOverlay").className="overlay open";
-  setTimeout(function(){document.getElementById("f-ini").focus()},100);
+  document.getElementById('addModalTitle').textContent='Duplicar Evento';
+  document.getElementById('f-nome').value=ev.nome||'';
+  document.getElementById('f-mes').value=ev.mes||'';
+  document.getElementById('f-sem').value=ev.sem||'';
+  document.getElementById('f-ini').value='';
+  document.getElementById('f-fim').value='';
+  document.getElementById('f-cat').value=ev.cat||'';
+  document.getElementById('f-publico').value=ev.publico||'';
+  document.getElementById('f-area').value=ev.area||'';
+  document.getElementById('f-nat').value=ev.nat||'Não';
+  document.getElementById('f-status').value=ev.status||'';
+  document.getElementById('f-demanda').value=ev.demanda||'';
+  document.getElementById('f-desc').value=ev.desc||'';
+  document.getElementById('addOverlay').className='overlay open';
+  setTimeout(function(){document.getElementById('f-ini').focus()},100);
 }
 
 function openAddModal(){
@@ -1017,7 +929,7 @@ function saveEvent(){
   var status=document.getElementById('f-status').value;
   var ini=document.getElementById('f-ini').value;
   var fim=document.getElementById('f-fim').value;
-  var nat=document.getElementById('f-nat').value; // "Sim" | "A confirmar" | "Não"
+  var nat=document.getElementById('f-nat').value;
   var sem=document.getElementById('f-sem').value;
   var demanda=document.getElementById('f-demanda').value;
   var desc=document.getElementById('f-desc').value.trim();
@@ -1031,41 +943,29 @@ function saveEvent(){
 
   var noDate=(!ini);
   var mNum=MONTH_NUM[mes]||1;
-  if(noDate){
-    ini=nextBusinessDay(2026,mNum-1);
-    fim=ini;
-  } else {
-    fim=fim||ini;
-  }
+  if(noDate){ ini=nextBusinessDay(2026,mNum-1); fim=ini; } else { fim=fim||ini; }
 
   var pri=nat==='Sim'?'Alta':status==='TBD'?'Baixa':status==='Em andamento'?'Alta':'Média';
 
   var data={
-    id: editId||nid++,
-    nome:nome, proj:'', mes:mes, sem:sem,
-    area:area, publico:publico, cat:cat,
-    ini:ini, fim:fim, hi:'', hf:'', local:'',
-    desc:desc, pri:pri, status:status,
+    id:editId||nid++, nome:nome, proj:'', mes:mes, sem:sem,
+    area:area, publico:publico, cat:cat, ini:ini, fim:fim,
+    hi:'', hf:'', local:'', desc:desc, pri:pri, status:status,
     nat:nat, noDate:noDate, demanda:demanda
   };
 
-  if(editId){
-    var idx=events.findIndex(function(e){return e.id===editId});
-    if(idx>=0)events[idx]=data;
-  } else {
-    events.push(data);
-  }
+  if(editId){ var idx=events.findIndex(function(e){return e.id===editId}); if(idx>=0)events[idx]=data; }
+  else { events.push(data); }
 
   curY=2026; curM=mNum-1;
   closeAddModal();
-  saveEventsToGitHub(editId?'Evento atualizado! ✓':'Evento adicionado! ✓', data);
+  saveToGAS(editId?'Evento atualizado! ✓':'Evento adicionado! ✓', data, function(){ renderCalendar(); });
   editId=null;
 }
 
 function showToast(msg){
   var t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='toast show';
+  t.textContent=msg;t.className='toast show';
   setTimeout(function(){t.className='toast'},3000);
 }
 
@@ -1096,8 +996,8 @@ document.addEventListener('click',function(e){
   if(dp&&dp.classList.contains('open')&&!dp.contains(e.target)&&!e.target.classList.contains('more-events'))closeDayPopup();
 });
 
-// Inicia carregando sempre do Supabase
-loadEventsFromGitHub(function(){ renderCalendar(); });
+// ── INIT ──────────────────────────────────────────────────────
+loadEvents(function(){ renderCalendar(); });
 </script>
 </body>
 </html>
