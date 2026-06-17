@@ -556,7 +556,7 @@ function rowToEv(r){
     id:Number(r.id)||0, nome:r.nome||'', proj:r.proj||'', area:r.area||'',
     publico:r.publico||'', cat:r.cat||'', ini:r.ini||'', fim:r.fim||'',
     hi:r.hi||'', hf:r.hf||'', local:r.local||'',
-    desc:r.descricao||'', pri:r.pri||'', status:r.status||'',
+    desc:r.descricao||'', ini:(r.ini||'').toString().split('T')[0], fim:(r.fim||'').toString().split('T')[0], pri:r.pri||'', status:r.status||'',
     nat:nat, noDate:noDate, demanda:r.demanda||'', mes:r.mes||'', sem:r.sem||''
   };
 }
