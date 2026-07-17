@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orçamento de Tecnologia 2027 — D&A e Cultura</title>
+<style>
+:root{
+  --ink:#161A2E;
+  --ink-soft:#6B7086;
+  --ink-faint:#9297A8;
+  --bg:#FAFAFC;
+  --panel:#FFFFFF;
+  --line:#E9EAF1;
+  --line-soft:#F2F3F8;
+  --brand:#1E2140;
+  --accent:#0E8F86;
+  --accent-soft:#E7F5F3;
+  --coral:#C7423E;
+  --coral-soft:#FBEBEA;
+  --green:#1C8A5C;
+  --radius-s:6px;
+  --radius-m:10px;
+  --radius-l:16px;
+  --shadow-s:0 1px 2px rgba(20,24,50,.05);
+  --shadow-m:0 6px 20px rgba(20,24,50,.09);
+  --shadow-l:0 16px 44px rgba(20,24,50,.18);
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:13.5px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent);color:#fff}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+.tabnum{font-variant-numeric:tabular-nums}
+
+/* ===== Header ===== */
+.topbar{background:var(--brand);color:#fff;padding:18px 28px}
+.tb-inner{max-width:1320px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.tb-left{min-width:260px}
+.tb-title{font-size:17px;font-weight:700;letter-spacing:-.2px}
+.tb-sub{font-size:11.5px;color:#9DA3C7;margin-top:3px}
+.tb-meta{font-size:11px;color:#9DA3C7;margin-top:8px}
+.tb-meta b{color:#fff;font-weight:600}
+.conn-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;margin-top:7px;padding:3px 9px;border-radius:20px}
+.conn-badge.on{background:rgba(14,143,134,.28);color:#8FE0D6}
+.conn-badge.off{background:rgba(255,255,255,.1);color:#C7CBE6}
+
+.hero-kpi{display:flex;align-items:center;gap:22px}
+.hk-block{text-align:right}
+.hk-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#8B91BB;margin-bottom:2px}
+.hk-value{font-size:15px;font-weight:600;color:#C7CBE6;line-height:1}
+.hk-arrow{color:#565C86;font-size:16px}
+.hk-hero{text-align:right}
+.hk-hero .hk-value{font-size:30px;font-weight:800;color:#fff;letter-spacing:-.5px}
+.hk-delta{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+.hk-delta.down{background:rgba(28,138,92,.28);color:#A9EFCB}
+.hk-delta.up{background:rgba(199,66,62,.28);color:#FFC6C3}
+.hk-delta.flat{background:rgba(255,255,255,.1);color:#C7CBE6}
+
+/* ===== Toolbar ===== */
+.toolbar{position:sticky;top:0;z-index:80;background:var(--panel);border-bottom:1px solid var(--line);padding:9px 28px}
+.tw{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.area-tabs{display:flex;gap:1px;flex-wrap:wrap}
+.area-tab{border:none;background:transparent;padding:6px 11px;border-radius:7px;font-size:12px;font-weight:600;color:var(--ink-soft)}
+.area-tab.active{background:var(--ink);color:#fff}
+.area-tab .cnt{opacity:.6;font-weight:500;margin-left:2px}
+.search-box{position:relative;width:190px}
+.search-box input{width:100%;padding:6px 10px 6px 28px;border:1px solid var(--line);border-radius:7px;font-size:12px;outline:none;background:var(--bg);color:var(--ink)}
+.search-box input:focus{border-color:var(--ink)}
+.search-box svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.4}
+.view-toggle{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.vt-btn{border:none;background:var(--panel);padding:6px 11px;font-size:12px;font-weight:600;color:var(--ink-soft);border-right:1px solid var(--line)}
+.vt-btn:last-child{border-right:none}
+.vt-btn.active{background:var(--ink);color:#fff}
+.tw-right{margin-left:auto;display:flex;gap:6px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;border:none;white-space:nowrap;transition:opacity .12s,background .12s}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-primary:hover{opacity:.85}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{opacity:.85}
+.btn-ghost{background:var(--panel);color:var(--ink-soft);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--ink);color:var(--ink)}
+.btn-sm{padding:4px 9px;font-size:11px;border-radius:6px}
+.btn-text{background:none;color:var(--ink-soft);padding:4px 6px;font-size:11.5px;font-weight:600}
+.btn-text:hover{color:var(--coral)}
+
+/* ===== Layout ===== */
+.wrap{max-width:1320px;margin:0 auto;padding:18px 28px 70px}
+.hint-line{font-size:11.5px;color:var(--ink-faint);margin-bottom:14px}
+.hint-line b{color:var(--ink-soft)}
+
+.area-section{margin-bottom:8px}
+.area-head{display:flex;align-items:baseline;gap:10px;padding:14px 2px 8px;cursor:pointer;user-select:none}
+.area-head:hover .area-name{color:var(--accent)}
+.area-name{font-size:13px;font-weight:700;color:var(--ink)}
+.area-count{font-size:11px;color:var(--ink-faint)}
+.area-money{margin-left:auto;display:flex;gap:16px;font-size:12px}
+.area-money .m-val{font-weight:700}
+.area-money .m-val.y27{color:var(--accent)}
+.area-chevron{color:var(--ink-faint);transition:transform .15s}
+.area-section.collapsed .area-chevron{transform:rotate(-90deg)}
+.area-section.collapsed .people-grid{display:none}
+.area-divider{height:1px;background:var(--line);margin-bottom:12px}
+
+.people-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;border-radius:var(--radius-m);transition:background .12s,box-shadow .12s;padding:2px}
+.people-grid.drag-over{background:var(--accent-soft);box-shadow:inset 0 0 0 2px dashed var(--accent)}
+
+/* ===== Person card ===== */
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-m);padding:13px 14px;display:flex;flex-direction:column;gap:8px;transition:border-color .12s,box-shadow .12s,opacity .12s;cursor:grab}
+.pcard:hover{border-color:#D4D6E4;box-shadow:var(--shadow-s)}
+.pcard.dragging{opacity:.35;cursor:grabbing}
+.pcard-drag-handle{color:var(--ink-faint);font-size:11px;flex-shrink:0;cursor:grab;padding:0 2px;letter-spacing:1px}
+.pcard-head{display:flex;align-items:center;gap:8px}
+.pcard-id{flex:1;min-width:0;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.pcard-name{font-size:12.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.pcard-cargo{font-size:10.5px;color:var(--ink-faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard-del{opacity:0;transition:opacity .12s;border:none;background:none;color:var(--ink-faint);font-size:11px;padding:2px 4px;flex-shrink:0}
+.pcard:hover .pcard-del{opacity:1}
+.pcard-del:hover{color:var(--coral)}
+
+.area-select{border:none;background:var(--line-soft);color:var(--ink-soft);font-size:10.5px;font-weight:600;padding:3px 20px 3px 8px;border-radius:6px;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L4 4L7 1' stroke='%236B7086' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;max-width:100%}
+.area-select:hover{background-color:var(--line)}
+.area-select:focus{outline:1.5px solid var(--ink)}
+
+.item-list{display:flex;flex-direction:column}
+.item-row{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--line-soft)}
+.item-row:last-child{border-bottom:none}
+.item-name{flex:1;min-width:0;font-size:12px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-v27{font-size:12px;font-weight:700;color:var(--ink);flex-shrink:0;min-width:56px;text-align:right}
+.item-v26{font-size:9.5px;color:var(--ink-faint);flex-shrink:0;min-width:44px;text-align:right;text-decoration:line-through;text-decoration-color:var(--line);opacity:.85}
+.item-actions{display:flex;gap:0;flex-shrink:0;opacity:0;transition:opacity .12s;width:38px}
+.item-row:hover .item-actions{opacity:1}
+.mini-btn{width:18px;height:18px;border-radius:5px;border:none;background:transparent;color:var(--ink-faint);display:flex;align-items:center;justify-content:center}
+.mini-btn:hover{background:var(--line-soft);color:var(--ink)}
+.mini-btn.del:hover{color:var(--coral)}
+.item-empty{font-size:11px;color:var(--ink-faint);font-style:italic;padding:5px 2px}
+
+.pcard-add{border:none;background:none;padding:4px 2px;font-size:11px;font-weight:600;color:var(--ink-faint);text-align:left}
+.pcard-add:hover{color:var(--accent)}
+
+.pcard-foot{display:flex;justify-content:space-between;align-items:center;padding-top:7px;margin-top:2px;border-top:1px solid var(--line)}
+.pcard-foot .f-label{font-size:11px;color:var(--ink-faint)}
+.pcard-foot .f-val{font-size:14px;font-weight:800;color:var(--accent)}
+.pcard-delta{font-size:10px;font-weight:600;color:var(--ink-faint)}
+.pcard-delta.down{color:var(--green)}
+.pcard-delta.up{color:var(--coral)}
+
+/* ===== Table (Lista) view ===== */
+.table-wrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-m);overflow:hidden}
+table.full{width:100%;border-collapse:collapse;font-size:12px}
+table.full thead th{background:var(--bg);text-align:left;padding:8px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-faint);font-weight:700;border-bottom:1px solid var(--line)}
+table.full tbody td{padding:7px 12px;border-bottom:1px solid var(--line-soft);vertical-align:middle;color:var(--ink)}
+table.full tbody tr:last-child td{border-bottom:none}
+table.full tbody tr:hover{background:var(--bg)}
+table.full tbody tr:hover .item-actions{opacity:1}
+.name-cargo b{font-weight:600}
+.name-cargo div{font-size:10px;color:var(--ink-faint)}
+.badge-area{font-size:10px;font-weight:600;color:var(--ink-soft)}
+.badge-cat{font-size:10.5px;color:var(--ink-faint)}
+.tc-right{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tc-right.v27{font-weight:700}
+
+/* ===== Catalog view ===== */
+.cat-group{margin-bottom:20px}
+.cat-group-head{font-size:12px;font-weight:700;color:var(--ink);padding:2px 2px 8px;display:flex;align-items:baseline;gap:8px}
+.cat-group-head .cnt{font-size:11px;font-weight:500;color:var(--ink-faint)}
+.cat-row-add{opacity:0;transition:opacity .12s;display:inline-block}
+table.full tbody tr:hover .cat-row-add{opacity:1}
+
+/* ===== Overlay / modal ===== */
+.overlay{display:none;position:fixed;inset:0;background:rgba(20,24,50,.45);z-index:300;overflow-y:auto;padding:40px 16px;align-items:flex-start;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--panel);border-radius:var(--radius-l);width:100%;max-width:420px;overflow:hidden;box-shadow:var(--shadow-l)}
+.modal-h{padding:16px 20px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.modal-title{font-size:14px;font-weight:700;color:var(--ink)}
+.modal-sub{font-size:11px;color:var(--ink-faint);margin-top:1px}
+.modal-close{margin-left:auto;width:26px;height:26px;border:none;border-radius:6px;background:var(--line-soft);cursor:pointer;color:var(--ink-soft);font-size:15px}
+.modal-close:hover{background:var(--line)}
+.modal-body{padding:16px 20px;max-height:60vh;overflow-y:auto}
+.modal-foot{padding:12px 20px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end}
+.fg{margin-bottom:12px}
+.fl{font-size:11px;font-weight:600;color:var(--ink-soft);margin-bottom:4px;display:block}
+.fi,.fs{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:7px;font-size:12.5px;color:var(--ink);background:var(--bg);outline:none}
+.fi:focus,.fs:focus{border-color:var(--ink);background:#fff}
+.preview-box{background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:14px}
+.preview-box .pb-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink-faint);font-weight:600;margin-bottom:2px}
+.preview-box .pb-vals{display:flex;justify-content:space-between;font-size:15px;font-weight:800}
+.preview-box .pb-vals span:last-child{color:var(--accent)}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--ink);color:#fff;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;z-index:999;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-l)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.footer-note{max-width:1320px;margin:6px auto 40px;padding:0 28px;font-size:10.5px;color:var(--ink-faint);line-height:1.6}
+.footer-note b{color:var(--ink-soft)}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--ink-faint)}
+.empty-state .es-icon{font-size:26px;margin-bottom:6px}
+.empty-state .es-title{font-weight:700;color:var(--ink);margin-bottom:2px;font-size:13px}
+
+@media (max-width:720px){
+  .topbar{padding:16px}
+  .tb-inner{flex-direction:column;align-items:flex-start;gap:14px}
+  .hero-kpi{align-self:stretch;justify-content:space-between}
+  .toolbar{padding:9px 16px}
+  .wrap{padding:14px 16px 60px}
+  .people-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-inner">
+    <div class="tb-left">
+      <div class="tb-title">Orçamento de Tecnologia 2027</div>
+      <div class="tb-sub">Desenvolvimento, Aprendizagem e Cultura</div>
+      <div class="tb-meta" id="tbMeta"></div>
+      <div class="conn-badge off" id="connBadge">○ Carregando...</div>
+    </div>
+    <div class="hero-kpi">
+      <div class="hk-block">
+        <div class="hk-label">2026</div>
+        <div class="hk-value tabnum" id="kpiTotal26">R$ 0</div>
+      </div>
+      <div class="hk-arrow">→</div>
+      <div class="hk-block hk-hero">
+        <div class="hk-label">2027</div>
+        <div class="hk-value tabnum" id="kpiTotal27">R$ 0</div>
+        <div class="hk-delta flat" id="kpiDelta">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="tw">
+    <div class="area-tabs" id="areaTabs"></div>
+    <div class="search-box">
+      <svg width="12" height="12" viewBox="0 0 13 13" fill="none"><circle cx="5.5" cy="5.5" r="4.3" stroke="#6B7086" stroke-width="1.4"/><path d="M11 11L8.6 8.6" stroke="#6B7086" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar..." oninput="render()">
+    </div>
+    <div class="view-toggle">
+      <button class="vt-btn" id="vtCards" onclick="setViewMode('cards')">Cartões</button>
+      <button class="vt-btn active" id="vtList" onclick="setViewMode('list')">Lista</button>
+      <button class="vt-btn" id="vtCatalog" onclick="setViewMode('catalog')">Catálogo</button>
+    </div>
+    <div class="tw-right">
+      <button class="btn-text" onclick="confirmReset()"><span id="resetBtnLabel">Restaurar original</span></button>
+      <button class="btn btn-ghost" onclick="openAddPerson()">+ Pessoa</button>
+      <button class="btn btn-accent" onclick="exportExcel()">Exportar Excel</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="mainWrap"></div>
+
+<div class="footer-note">
+  <b>Como usar:</b> troque a área de cada pessoa, adicione/edite/remova ferramentas, inclua novas pessoas. Os valores vêm da tabela oficial de custos e recalculam automaticamente.
+  <br><b>Salvamento:</b> se a página estiver <b>conectada à planilha</b> (badge verde no topo), cada alteração já grava direto no Google Sheets — não precisa exportar nada. Se estiver em <b>modo local</b> (badge cinza), nada é salvo entre sessões: use o botão <b>Exportar Excel</b> antes de fechar a página. Veja o arquivo <b>Codigo_AppsScript.gs</b> para conectar a planilha em poucos passos.
+</div>
+
+<!-- Modal: Adicionar pessoa -->
+<div class="overlay" id="ovPerson" onclick="ovClick(event,'ovPerson')">
+  <div class="modal">
+    <div class="modal-h">
+      <div><div class="modal-title">Adicionar pessoa</div><div class="modal-sub">Novo membro no orçamento 2027</div></div>
+      <button class="modal-close" onclick="closeOv('ovPerson')">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Nome *</label><input class="fi" id="np-nome" placeholder="Ex: João da Silva"></div>
+      <div class="fg"><label class="fl">Cargo</label><input class="fi" id="np-cargo" placeholder="Ex: Analista de Gestão de Talentos"></div>
+      <div class="fg"><label class="fl">Área / Gerência *</label><select class="fs" id="np-area"></select></div>
+      <div class="fg"><label class="fl">E-mail</label><input class="fi" id="np-email" placeholder="nome.sobrenome@g.globo"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOv('ovPerson')">Cancelar</button>
+      <button class="btn btn-primary" onclick="savePerson()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Adicionar/editar item -->
+<div class="overlay" id="ovItem" onclick="ovClick(event,'ovItem')">
+  <div class="modal">
+    <div class="modal-h">
+      <div><div class="modal-title" id="itemModalTitle">Adicionar ferramenta</div><div class="modal-sub" id="itemModalSub"></div></div>
+      <button class="modal-close" onclick="closeOv('ovItem')">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Categoria</label><select class="fs" id="it-cat" onchange="fillCatalogSelect()"></select></div>
+      <div class="fg"><label class="fl">Ferramenta / Item *</label><select class="fs" id="it-catalog"></select></div>
+      <div class="preview-box" id="it-preview" style="display:none">
+        <div class="pb-labels"><span>2026</span><span>2027</span></div>
+        <div class="pb-vals"><span id="it-prev26">—</span><span id="it-prev27">—</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOv('ovItem')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveItem()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: atribuir item do catálogo -->
+<div class="overlay" id="ovQuickAdd" onclick="ovClick(event,'ovQuickAdd')">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-h">
+      <div><div class="modal-title">Atribuir ferramenta</div><div class="modal-sub" id="qa-item-name"></div></div>
+      <button class="modal-close" onclick="closeOv('ovQuickAdd')">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div class="preview-box">
+        <div class="pb-labels"><span>2026</span><span>2027</span></div>
+        <div class="pb-vals"><span id="qa-prev26">—</span><span id="qa-prev27">—</span></div>
+      </div>
+      <div class="fg"><label class="fl">Atribuir para *</label><select class="fs" id="qa-person"></select></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOv('ovQuickAdd')">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmQuickAdd()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: confirmação genérica -->
+<div class="overlay" id="ovConfirm" onclick="ovClick(event,'ovConfirm')">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-h">
+      <div><div class="modal-title" id="confirmTitle">Confirmar</div><div class="modal-sub" id="confirmSub"></div></div>
+      <button class="modal-close" onclick="closeOv('ovConfirm')">&#215;</button>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOv('ovConfirm')">Cancelar</button>
+      <button class="btn btn-primary" id="confirmBtn" style="background:var(--coral)">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+/* ============================================================
+   DADOS BASE
+   ============================================================ */
+/* ============================================================
+   CONEXÃO COM O GOOGLE SHEETS (Apps Script)
+   ============================================================
+   Cole abaixo a URL do seu Web App do Apps Script (termina em /exec).
+   Veja o arquivo Codigo_AppsScript.gs para o passo a passo de como
+   criar a planilha e publicar essa URL.
+   Deixe como '' para a página funcionar em modo local (sem salvar
+   em lugar nenhum — só nesta sessão do navegador).
+   ============================================================ */
+let GAS_URL = 'https://script.google.com/macros/s/AKfycby-9FT3A-luVEa6X9FKRnONs2-gbJYKQ8eusTJO8lrPYImd2j4q6tyds5q3EuCtYRpt/exec'; // <<--- COLE_AQUI_A_URL_DO_APPS_SCRIPT
+
+const EMBEDDED_CATALOG = [{"id": "Workplace|WP Perfil 4|None", "indicador": "Workplace", "perfil": "WP Perfil 4", "tipo": null, "v26": 787.0, "v27": 700.0, "catLabel": "💻 Notebook & Workplace", "label": "WP Perfil 4", "grupo": "Workplace", "catLabelShort": "Workplace"}, {"id": "Workplace|WP Perfil 1|None", "indicador": "Workplace", "perfil": "WP Perfil 1", "tipo": null, "v26": 1854.0, "v27": 1937.43, "catLabel": "💻 Notebook & Workplace", "label": "WP Perfil 1", "grupo": "Workplace", "catLabelShort": "Workplace"}, {"id": "Workplace|WP Perfil 5|None", "indicador": "Workplace", "perfil": "WP Perfil 5", "tipo": null, "v26": 106.0, "v27": 110.77, "catLabel": "💻 Notebook & Workplace", "label": "WP Perfil 5", "grupo": "Workplace", "catLabelShort": "Workplace"}, {"id": "Workplace|WP Perfil 2|None", "indicador": "Workplace", "perfil": "WP Perfil 2", "tipo": null, "v26": 1167.0, "v27": 1039.0, "catLabel": "💻 Notebook & Workplace", "label": "WP Perfil 2", "grupo": "Workplace", "catLabelShort": "Workplace"}, {"id": "Workplace|WP Perfil 3|None", "indicador": "Workplace", "perfil": "WP Perfil 3", "tipo": null, "v26": 1244.0, "v27": 1106.0, "catLabel": "💻 Notebook & Workplace", "label": "WP Perfil 3", "grupo": "Workplace", "catLabelShort": "Workplace"}, {"id": "Workplace|WP Extra|None", "indicador": "Workplace", "perfil": "WP Extra", "tipo": null, "v26": 1685.0, "v27": 1685.0, "catLabel": "💻 Notebook & Workplace", "label": "WP Extra", "grupo": "Workplace", "catLabelShort": "Workplace"}, {"id": "Extra - CATV|Básico|None", "indicador": "Extra - CATV", "perfil": "Básico", "tipo": null, "v26": 58.0, "v27": 60.61, "catLabel": "📺 CATV", "label": "Básico", "grupo": "CATV", "catLabelShort": "CATV"}, {"id": "Extra - VC|-|None", "indicador": "Extra - VC", "perfil": "-", "tipo": null, "v26": 1790.0, "v27": 1790.0, "catLabel": "🎥 Videoconferência", "label": "Sala de treinamento (VC)", "grupo": "VC", "catLabelShort": "VC"}, {"id": "Extra - TV|None|None", "indicador": "Extra - TV", "perfil": null, "tipo": null, "v26": 90.0, "v27": 94.05, "catLabel": "📡 TV por Assinatura", "label": "Assinatura TV Extra", "grupo": "TV", "catLabelShort": "TV"}, {"id": "Extra - Licenças|Microsoft Project Plan 3|None", "indicador": "Extra - Licenças", "perfil": "Microsoft Project Plan 3", "tipo": null, "v26": 127.75, "v27": 127.75, "catLabel": "🔑 Licenças de Software", "label": "Microsoft Project Plan 3", "grupo": "Microsoft", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Microsoft Project Plan 5|None", "indicador": "Extra - Licenças", "perfil": "Microsoft Project Plan 5", "tipo": null, "v26": 234.2, "v27": 234.2, "catLabel": "🔑 Licenças de Software", "label": "Microsoft Project Plan 5", "grupo": "Microsoft", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Microsoft Visio Plan 1|None", "indicador": "Extra - Licenças", "perfil": "Microsoft Visio Plan 1", "tipo": null, "v26": 22.03, "v27": 22.03, "catLabel": "🔑 Licenças de Software", "label": "Microsoft Visio Plan 1", "grupo": "Microsoft", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Microsoft Visio Plan 2|None", "indicador": "Extra - Licenças", "perfil": "Microsoft Visio Plan 2", "tipo": null, "v26": 66.03, "v27": 66.03, "catLabel": "🔑 Licenças de Software", "label": "Microsoft Visio Plan 2", "grupo": "Microsoft", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Microsoft Power Apps per user plan|None", "indicador": "Extra - Licenças", "perfil": "Microsoft Power Apps per user plan", "tipo": null, "v26": 0.0, "v27": 0.0, "catLabel": "🔑 Licenças de Software", "label": "Microsoft Power Apps per user plan", "grupo": "Microsoft", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Microsoft Power BI PRO|None", "indicador": "Extra - Licenças", "perfil": "Microsoft Power BI PRO", "tipo": null, "v26": 36.38, "v27": 36.38, "catLabel": "🔑 Licenças de Software", "label": "Microsoft Power BI PRO", "grupo": "Microsoft", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Microsoft Visual Studio Professional with GitHub Enterprise|None", "indicador": "Extra - Licenças", "perfil": "Microsoft Visual Studio Professional with GitHub Enterprise", "tipo": null, "v26": 515.6, "v27": 516.6, "catLabel": "🔑 Licenças de Software", "label": "Microsoft Visual Studio Professional with GitHub Enterprise", "grupo": "Microsoft", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Microsoft Visual Studio Enterprise with GitHub Enterprise|None", "indicador": "Extra - Licenças", "perfil": "Microsoft Visual Studio Enterprise with GitHub Enterprise", "tipo": null, "v26": 3660.85, "v27": 3660.85, "catLabel": "🔑 Licenças de Software", "label": "Microsoft Visual Studio Enterprise with GitHub Enterprise", "grupo": "Microsoft", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Acrobat Pro DC for enterprise|None", "indicador": "Extra - Licenças", "perfil": "Adobe Acrobat Pro DC for enterprise", "tipo": null, "v26": 85.91, "v27": 145.61, "catLabel": "🔑 Licenças de Software", "label": "Adobe Acrobat Pro DC for enterprise", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe After Effects - Single App CC for enterprise PRO|None", "indicador": "Extra - Licenças", "perfil": "Adobe After Effects - Single App CC for enterprise PRO", "tipo": null, "v26": 201.34, "v27": 328.51, "catLabel": "🔑 Licenças de Software", "label": "Adobe After Effects - Single App CC for enterprise PRO", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Photoshop - Single App CC for enterprise PRO|None", "indicador": "Extra - Licenças", "perfil": "Adobe Photoshop - Single App CC for enterprise PRO", "tipo": null, "v26": 201.34, "v27": 328.51, "catLabel": "🔑 Licenças de Software", "label": "Adobe Photoshop - Single App CC for enterprise PRO", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Premiere Pro - Single App CC for enterprise PRO|None", "indicador": "Extra - Licenças", "perfil": "Adobe Premiere Pro - Single App CC for enterprise PRO", "tipo": null, "v26": 201.34, "v27": 328.51, "catLabel": "🔑 Licenças de Software", "label": "Adobe Premiere Pro - Single App CC for enterprise PRO", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe InDesign - Single App CC for enterprise PRO|None", "indicador": "Extra - Licenças", "perfil": "Adobe InDesign - Single App CC for enterprise PRO", "tipo": null, "v26": 201.34, "v27": 328.51, "catLabel": "🔑 Licenças de Software", "label": "Adobe InDesign - Single App CC for enterprise PRO", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Illustrator - Single App CC for enterprise PRO|None", "indicador": "Extra - Licenças", "perfil": "Adobe Illustrator - Single App CC for enterprise PRO", "tipo": null, "v26": 201.34, "v27": 328.51, "catLabel": "🔑 Licenças de Software", "label": "Adobe Illustrator - Single App CC for enterprise PRO", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Dreamweaver - Single App CC for enterprise PRO|None", "indicador": "Extra - Licenças", "perfil": "Adobe Dreamweaver - Single App CC for enterprise PRO", "tipo": null, "v26": 201.34, "v27": 328.51, "catLabel": "🔑 Licenças de Software", "label": "Adobe Dreamweaver - Single App CC for enterprise PRO", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Animate - Single App CC for enterprise PRO|None", "indicador": "Extra - Licenças", "perfil": "Adobe Animate - Single App CC for enterprise PRO", "tipo": null, "v26": 201.34, "v27": 328.51, "catLabel": "🔑 Licenças de Software", "label": "Adobe Animate - Single App CC for enterprise PRO", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Audition - Single App CC for enterprise PRO|None", "indicador": "Extra - Licenças", "perfil": "Adobe Audition - Single App CC for enterprise PRO", "tipo": null, "v26": 201.34, "v27": 328.51, "catLabel": "🔑 Licenças de Software", "label": "Adobe Audition - Single App CC for enterprise PRO", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Dimension - Single App CC for enterprise PRO|None", "indicador": "Extra - Licenças", "perfil": "Adobe Dimension - Single App CC for enterprise PRO", "tipo": null, "v26": 201.34, "v27": 328.51, "catLabel": "🔑 Licenças de Software", "label": "Adobe Dimension - Single App CC for enterprise PRO", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Lightroom for enterprise|None", "indicador": "Extra - Licenças", "perfil": "Adobe Lightroom for enterprise", "tipo": null, "v26": 0.0, "v27": 0.0, "catLabel": "🔑 Licenças de Software", "label": "Adobe Lightroom for enterprise", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Substance for enterprise|None", "indicador": "Extra - Licenças", "perfil": "Adobe Substance for enterprise", "tipo": null, "v26": 617.44, "v27": 1007.42, "catLabel": "🔑 Licenças de Software", "label": "Adobe Substance for enterprise", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Creative Cloud for enterprise All Apps PRO|None", "indicador": "Extra - Licenças", "perfil": "Adobe Creative Cloud for enterprise All Apps PRO", "tipo": null, "v26": 426.89, "v27": 718.93, "catLabel": "🔑 Licenças de Software", "label": "Adobe Creative Cloud for enterprise All Apps PRO", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Creative Cloud for enterprise All Apps - FRL|None", "indicador": "Extra - Licenças", "perfil": "Adobe Creative Cloud for enterprise All Apps - FRL", "tipo": null, "v26": 0.0, "v27": 0.0, "catLabel": "🔑 Licenças de Software", "label": "Adobe Creative Cloud for enterprise All Apps - FRL", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Photoshop Elements|None", "indicador": "Extra - Licenças", "perfil": "Adobe Photoshop Elements", "tipo": null, "v26": 0.0, "v27": 0.0, "catLabel": "🔑 Licenças de Software", "label": "Adobe Photoshop Elements", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Adobe Premiere Elements|None", "indicador": "Extra - Licenças", "perfil": "Adobe Premiere Elements", "tipo": null, "v26": 0.0, "v27": 0.0, "catLabel": "🔑 Licenças de Software", "label": "Adobe Premiere Elements", "grupo": "Adobe", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Autodesk Architecture Engineering & Construction Collection|None", "indicador": "Extra - Licenças", "perfil": "Autodesk Architecture Engineering & Construction Collection", "tipo": null, "v26": 1163.63, "v27": 824.58, "catLabel": "🔑 Licenças de Software", "label": "Autodesk Architecture Engineering & Construction Collection", "grupo": "Autodesk", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Autodesk Media & Entertainment Collection|None", "indicador": "Extra - Licenças", "perfil": "Autodesk Media & Entertainment Collection", "tipo": null, "v26": 627.92, "v27": 627.92, "catLabel": "🔑 Licenças de Software", "label": "Autodesk Media & Entertainment Collection", "grupo": "Autodesk", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Google Looker - Viewer|None", "indicador": "Extra - Licenças", "perfil": "Google Looker - Viewer", "tipo": null, "v26": 453.0, "v27": 453.0, "catLabel": "🔑 Licenças de Software", "label": "Google Looker - Viewer", "grupo": "Google", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Google Looker - Standard|None", "indicador": "Extra - Licenças", "perfil": "Google Looker - Standard", "tipo": null, "v26": 960.15, "v27": 907.0, "catLabel": "🔑 Licenças de Software", "label": "Google Looker - Standard", "grupo": "Google", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Google Looker - Developer|None", "indicador": "Extra - Licenças", "perfil": "Google Looker - Developer", "tipo": null, "v26": 1889.0, "v27": 1889.0, "catLabel": "🔑 Licenças de Software", "label": "Google Looker - Developer", "grupo": "Google", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Google Looker - Studio|None", "indicador": "Extra - Licenças", "perfil": "Google Looker - Studio", "tipo": null, "v26": 0, "v27": 0, "catLabel": "🔑 Licenças de Software", "label": "Google Looker - Studio", "grupo": "Google", "catLabelShort": "Licenças"}, {"id": "Extra - CATV|APP MOBILE CATV|None", "indicador": "Extra - CATV", "perfil": "APP MOBILE CATV", "tipo": null, "v26": 37.0, "v27": 37.0, "catLabel": "📺 CATV", "label": "APP MOBILE CATV", "grupo": "CATV", "catLabelShort": "CATV"}, {"id": "Extra - CATV|PORTAL CATV - WORKPLACE (BÁSICO)|None", "indicador": "Extra - CATV", "perfil": "PORTAL CATV - WORKPLACE (BÁSICO)", "tipo": null, "v26": 80.0, "v27": 58.0, "catLabel": "📺 CATV", "label": "PORTAL CATV - WORKPLACE (BÁSICO)", "grupo": "CATV", "catLabelShort": "CATV"}, {"id": "Extra - CATV|PORTAL CATV - WORKPLACE (FULL)|None", "indicador": "Extra - CATV", "perfil": "PORTAL CATV - WORKPLACE (FULL)", "tipo": null, "v26": 118.0, "v27": 96.0, "catLabel": "📺 CATV", "label": "PORTAL CATV - WORKPLACE (FULL)", "grupo": "CATV", "catLabelShort": "CATV"}, {"id": "Extra - CATV|PONTO CATV/IPTV (BÁSICO)|None", "indicador": "Extra - CATV", "perfil": "PONTO CATV/IPTV (BÁSICO)", "tipo": null, "v26": 58.0, "v27": 58.0, "catLabel": "📺 CATV", "label": "PONTO CATV/IPTV (BÁSICO)", "grupo": "CATV", "catLabelShort": "CATV"}, {"id": "Extra - CATV|PONTO CATV/IPTV (FULL)|None", "indicador": "Extra - CATV", "perfil": "PONTO CATV/IPTV (FULL)", "tipo": null, "v26": 96.0, "v27": 96.0, "catLabel": "📺 CATV", "label": "PONTO CATV/IPTV (FULL)", "grupo": "CATV", "catLabelShort": "CATV"}, {"id": "Extra - Movel|Linha|None", "indicador": "Extra - Movel", "perfil": "Linha", "tipo": null, "v26": 12.0, "v27": 6.0, "catLabel": "📱 Telefonia Móvel", "label": "Linha", "grupo": "Móvel", "catLabelShort": "Móvel"}, {"id": "Extra - Movel|Dados Móveis|5GB", "indicador": "Extra - Movel", "perfil": "Dados Móveis", "tipo": "5GB", "v26": 11.0, "v27": 11.49, "catLabel": "📱 Telefonia Móvel", "label": "Dados Móveis – 5GB", "grupo": "Móvel", "catLabelShort": "Móvel"}, {"id": "Extra - Movel|Dados Móveis|8GB", "indicador": "Extra - Movel", "perfil": "Dados Móveis", "tipo": "8GB", "v26": 17.6, "v27": 18.39, "catLabel": "📱 Telefonia Móvel", "label": "Dados Móveis – 8GB", "grupo": "Móvel", "catLabelShort": "Móvel"}, {"id": "Extra - Movel|Dados Móveis|10GB", "indicador": "Extra - Movel", "perfil": "Dados Móveis", "tipo": "10GB", "v26": 22.0, "v27": 22.0, "catLabel": "📱 Telefonia Móvel", "label": "Dados Móveis – 10GB", "grupo": "Móvel", "catLabelShort": "Móvel"}, {"id": "Extra - Movel|Smartphone|IOS", "indicador": "Extra - Movel", "perfil": "Smartphone", "tipo": "IOS", "v26": 180.0, "v27": 230.0, "catLabel": "📱 Telefonia Móvel", "label": "Smartphone – IOS", "grupo": "Móvel", "catLabelShort": "Móvel"}, {"id": "Extra - Movel|Smartphone|Android", "indicador": "Extra - Movel", "perfil": "Smartphone", "tipo": "Android", "v26": 25.0, "v27": 25.0, "catLabel": "📱 Telefonia Móvel", "label": "Smartphone – Android", "grupo": "Móvel", "catLabelShort": "Móvel"}, {"id": "Extra - Movel|Modem|modem", "indicador": "Extra - Movel", "perfil": "Modem", "tipo": "modem", "v26": 5.0, "v27": 5.0, "catLabel": "📱 Telefonia Móvel", "label": "Modem – modem", "grupo": "Móvel", "catLabelShort": "Móvel"}, {"id": "Extra - Movel|Passaporte Americas|5GB", "indicador": "Extra - Movel", "perfil": "Passaporte Americas", "tipo": "5GB", "v26": 9.99, "v27": 9.99, "catLabel": "📱 Telefonia Móvel", "label": "Passaporte Americas – 5GB", "grupo": "Móvel", "catLabelShort": "Móvel"}, {"id": "Extra - Movel|Passaporte Europa|None", "indicador": "Extra - Movel", "perfil": "Passaporte Europa", "tipo": null, "v26": 19.99, "v27": 19.99, "catLabel": "📱 Telefonia Móvel", "label": "Passaporte Europa", "grupo": "Móvel", "catLabelShort": "Móvel"}, {"id": "Extra - Movel|Passaporte Mundo|15GB", "indicador": "Extra - Movel", "perfil": "Passaporte Mundo", "tipo": "15GB", "v26": 29.99, "v27": 29.99, "catLabel": "📱 Telefonia Móvel", "label": "Passaporte Mundo – 15GB", "grupo": "Móvel", "catLabelShort": "Móvel"}, {"id": "Extra - Ramal|Ramal|None", "indicador": "Extra - Ramal", "perfil": "Ramal", "tipo": null, "v26": 22.0, "v27": 22.0, "catLabel": "☎️ Ramal / Telefonia Fixa", "label": "Ramal", "grupo": "Ramal", "catLabelShort": "Ramal"}, {"id": "Extra - Ramal|Aparelho de Ramal Com Câmera|None", "indicador": "Extra - Ramal", "perfil": "Aparelho de Ramal Com Câmera", "tipo": null, "v26": 88.0, "v27": 88.0, "catLabel": "☎️ Ramal / Telefonia Fixa", "label": "Aparelho de Ramal Com Câmera", "grupo": "Ramal", "catLabelShort": "Ramal"}, {"id": "Extra - Ramal|Aparelho de Ramal Sem Câmera|None", "indicador": "Extra - Ramal", "perfil": "Aparelho de Ramal Sem Câmera", "tipo": null, "v26": 50.0, "v27": 50.0, "catLabel": "☎️ Ramal / Telefonia Fixa", "label": "Aparelho de Ramal Sem Câmera", "grupo": "Ramal", "catLabelShort": "Ramal"}, {"id": "Extra - Ramal|Aparelho de Ramal Equipe|None", "indicador": "Extra - Ramal", "perfil": "Aparelho de Ramal Equipe", "tipo": null, "v26": 25.0, "v27": 25.0, "catLabel": "☎️ Ramal / Telefonia Fixa", "label": "Aparelho de Ramal Equipe", "grupo": "Ramal", "catLabelShort": "Ramal"}, {"id": "Extra - Licenças|Figma Full Seat|None", "indicador": "Extra - Licenças", "perfil": "Figma Full Seat", "tipo": null, "v26": 445.2, "v27": 445.2, "catLabel": "🔑 Licenças de Software", "label": "Figma Full Seat", "grupo": "Outras", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|GitHub Copilot|None", "indicador": "Extra - Licenças", "perfil": "GitHub Copilot", "tipo": null, "v26": 515.6, "v27": 516.6, "catLabel": "🔑 Licenças de Software", "label": "GitHub Copilot", "grupo": "Microsoft", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Miro Enterprise|None", "indicador": "Extra - Licenças", "perfil": "Miro Enterprise", "tipo": null, "v26": 101.84, "v27": 101.84, "catLabel": "🔑 Licenças de Software", "label": "Miro Enterprise", "grupo": "Outras", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Monday Enterprise|None", "indicador": "Extra - Licenças", "perfil": "Monday Enterprise", "tipo": null, "v26": 145.13, "v27": 145.13, "catLabel": "🔑 Licenças de Software", "label": "Monday Enterprise", "grupo": "Outras", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|OpenAI ChatGPT Enterprise|None", "indicador": "Extra - Licenças", "perfil": "OpenAI ChatGPT Enterprise", "tipo": null, "v26": 313.34, "v27": 313.34, "catLabel": "🔑 Licenças de Software", "label": "OpenAI ChatGPT Enterprise", "grupo": "Outras", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Slack Pro Plan|None", "indicador": "Extra - Licenças", "perfil": "Slack Pro Plan", "tipo": null, "v26": 292.08, "v27": 292.08, "catLabel": "🔑 Licenças de Software", "label": "Slack Pro Plan", "grupo": "Outras", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Google NotebookLM|None", "indicador": "Extra - Licenças", "perfil": "Google NotebookLM", "tipo": null, "v26": 53.18, "v27": 53.18, "catLabel": "🔑 Licenças de Software", "label": "Google NotebookLM", "grupo": "Google", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Microsoft 365 Copilot|None", "indicador": "Extra - Licenças", "perfil": "Microsoft 365 Copilot", "tipo": null, "v26": 176.47, "v27": 176.47, "catLabel": "🔑 Licenças de Software", "label": "Microsoft 365 Copilot", "grupo": "Microsoft", "catLabelShort": "Licenças"}, {"id": "Extra - Licenças|Microsoft Teams Premium|None", "indicador": "Extra - Licenças", "perfil": "Microsoft Teams Premium", "tipo": null, "v26": 36.24, "v27": 36.24, "catLabel": "🔑 Licenças de Software", "label": "Microsoft Teams Premium", "grupo": "Microsoft", "catLabelShort": "Licenças"}];
+const EMBEDDED_PEOPLE = [{"nome": "AMANDA ELLEN SILVA DE FREITAS", "cargo": "ESPEC GESTAO TALENTOS", "login": "amanda.freitas", "email": "ae.freitas@g.globo", "area": "Desenvolvimento e Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 3|None", "label": "Notebook/Workplace – WP Perfil 3", "detalhe": "Notebook Especialista Apple", "id": "p1_i1"}], "id": "p1"}, {"nome": "JOAO PEDRO DE SOUZA MACIEL", "cargo": "ESTAGIARIO SUPERIOR - 06 HORAS", "login": "jomaciel", "email": "joao.pedro.souza@g.globo", "area": "Desenvolvimento e Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p2_i1"}], "id": "p2"}, {"nome": "PHILIPPE DE BRITO ANSELMO", "cargo": "GER SR DESENVOLVIMENTO E APRENDIZAGEM", "login": "phbrito", "email": "philippe.brito@g.globo", "area": "Desenvolvimento e Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 2|None", "label": "Notebook/Workplace – WP Perfil 2", "detalhe": "Notebook Padrão", "id": "p3_i1"}, {"catId": "Extra - Licenças|Google NotebookLM|None", "label": "Google NotebookLM", "detalhe": "Licença de software", "id": "p3_i2"}, {"catId": "Extra - Licenças|Microsoft 365 Copilot|None", "label": "Microsoft 365 Copilot", "detalhe": "Licença de software", "id": "p3_i3"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p3_i4"}, {"catId": "Extra - Licenças|Microsoft Teams Premium|None", "label": "Microsoft Teams Premium", "detalhe": "Licença de software", "id": "p3_i5"}], "id": "p3"}, {"nome": "ARIANE DE AMORIM BARRETO", "cargo": "ANL GESTAO TALENTOS II", "login": "abarreto", "email": "ariane.barreto@g.globo", "area": "Desenvolvimento", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p4_i1"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p4_i2"}], "id": "p4"}, {"nome": "GABRIELA PETERLE BEZERRA", "cargo": "ANL GESTAO TALENTOS III", "login": "gpeterle", "email": "gabriela.peterle@g.globo", "area": "Desenvolvimento", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p5_i1"}, {"catId": "Extra - Licenças|Microsoft 365 Copilot|None", "label": "Microsoft 365 Copilot", "detalhe": "Licença de software", "id": "p5_i2"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p5_i3"}], "id": "p5"}, {"nome": "PEDRO HENRIQUE SOUZA DE MESQUITA", "cargo": "ANL GESTAO TALENTOS II", "login": "pmesquit", "email": "pedro.mesquita@g.globo", "area": "Desenvolvimento", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p6_i1"}], "id": "p6"}, {"nome": "THALIA SANTIAGO DOS SANTOS", "cargo": "COORD GESTAO TALENTOS", "login": "thaliasa", "email": "thalia.santiago@g.globo", "area": "Desenvolvimento", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p7_i1"}, {"catId": "Extra - Licenças|Microsoft 365 Copilot|None", "label": "Microsoft 365 Copilot", "detalhe": "Licença de software", "id": "p7_i2"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p7_i3"}, {"catId": "Extra - Movel|Dados Móveis|5GB", "label": "Dados Móveis (5GB)", "detalhe": "Telefonia móvel", "id": "p7_i4"}, {"catId": "Extra - Movel|Linha|None", "label": "Linha Móvel", "detalhe": "Telefonia móvel", "id": "p7_i5"}, {"catId": "Extra - Ramal|Ramal|None", "label": "Ramal", "detalhe": "Telefonia fixa", "id": "p7_i6"}], "id": "p7"}, {"nome": "ADRIANA DOS REIS", "cargo": "COORD GESTAO TALENTOS", "login": "adrireis", "email": "adriana.reis@g.globo", "area": "Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p8_i1"}, {"catId": "Extra - Licenças|Microsoft 365 Copilot|None", "label": "Microsoft 365 Copilot", "detalhe": "Licença de software", "id": "p8_i2"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p8_i3"}], "id": "p8"}, {"nome": "AYSHA DE OLIVEIRA SANTOS", "cargo": "APRENDIZ - AUXILIAR ADMINISTRATIVO", "login": "aysantos", "email": "aysha.santos@g.globo", "area": "Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p9_i1"}], "id": "p9"}, {"nome": "FAGNER CABRAL PORTO", "cargo": "ANL GESTAO TALENTOS II", "login": "facabral", "email": "fagner.cabral@g.globo", "area": "Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p10_i1"}, {"catId": "Extra - VC|-|None", "label": "Sala de treinamento (VC)", "detalhe": "SALA DE TREINAMENTO", "id": "p10_i2"}, {"catId": "Extra - Licenças|Microsoft 365 Copilot|None", "label": "Microsoft 365 Copilot", "detalhe": "Licença de software", "id": "p10_i3"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p10_i4"}], "id": "p10"}, {"nome": "FERNANDO CARDOSO MENDES FERREIRA", "cargo": "ANL GESTAO TALENTOS III", "login": "fecardos", "email": "fernando.cardoso@g.globo", "area": "Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p11_i1"}, {"catId": "Extra - Licenças|Microsoft 365 Copilot|None", "label": "Microsoft 365 Copilot", "detalhe": "Licença de software", "id": "p11_i2"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p11_i3"}], "id": "p11"}, {"nome": "JESSICA RIBEIRO DA SILVA", "cargo": "ANL GESTAO TALENTOS III", "login": "jrsilva", "email": "jessica.ribeiro@g.globo", "area": "Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p12_i1"}, {"catId": "Extra - Licenças|Microsoft 365 Copilot|None", "label": "Microsoft 365 Copilot", "detalhe": "Licença de software", "id": "p12_i2"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p12_i3"}, {"catId": "Extra - Licenças|Miro Enterprise|None", "label": "Miro Enterprise", "detalhe": "Licença de software", "id": "p12_i4"}], "id": "p12"}, {"nome": "KAUAN DA SILVA", "cargo": "ESTAGIARIO SUPERIOR - 06 HORAS", "login": "kauansil", "email": "kauan.silva@g.globo", "area": "Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p13_i1"}], "id": "p13"}, {"nome": "PEDRO AUGUSTO SOUZA DE PAULA", "cargo": "ANL GESTAO TALENTOS I", "login": "pepaula", "email": "pedro.spaula@g.globo", "area": "Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p14_i1"}, {"catId": "Extra - Licenças|Google NotebookLM|None", "label": "Google NotebookLM", "detalhe": "Licença de software", "id": "p14_i2"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p14_i3"}, {"catId": "Extra - Licenças|Microsoft Project Plan 3|None", "label": "Microsoft Project Plan 3", "detalhe": "Licença de software", "id": "p14_i4"}], "id": "p14"}, {"nome": "THAIS DA SILVA SAVELLI GUIMARAES", "cargo": "ANL GESTAO TALENTOS III", "login": "tguimar", "email": "thais.guimaraes@g.globo", "area": "Aprendizagem", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p15_i1"}, {"catId": "Extra - Licenças|Google NotebookLM|None", "label": "Google NotebookLM", "detalhe": "Licença de software", "id": "p15_i2"}, {"catId": "Extra - Licenças|Microsoft 365 Copilot|None", "label": "Microsoft 365 Copilot", "detalhe": "Licença de software", "id": "p15_i3"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p15_i4"}, {"catId": "Extra - Licenças|Microsoft Visual Studio Professional with GitHub Enterprise|None", "label": "Microsoft Visual Studio Professional with GitHub Enterprise", "detalhe": "Licença de software", "id": "p15_i5"}], "id": "p15"}, {"nome": "ANA CAROLINE VIEGAS SANTOS", "cargo": "ASSIST GESTAO TALENTOS", "login": "anviegas", "email": "caroline.viegas@g.globo", "area": "Cultura", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p16_i1"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p16_i2"}], "id": "p16"}, {"nome": "MANUELA DA SILVA JESUS", "cargo": "ESPEC GESTAO TALENTOS", "login": "manuelaj", "email": "manuela.jesus@g.globo", "area": "Cultura", "itens": [{"catId": "Workplace|WP Perfil 4|None", "label": "Notebook/Workplace – WP Perfil 4", "detalhe": "Notebook Padrão", "id": "p17_i1"}, {"catId": "Extra - Licenças|Microsoft 365 Copilot|None", "label": "Microsoft 365 Copilot", "detalhe": "Licença de software", "id": "p17_i2"}, {"catId": "Extra - Licenças|Microsoft Power BI PRO|None", "label": "Microsoft Power BI Pro", "detalhe": "Licença de software", "id": "p17_i3"}], "id": "p17"}];
+
+const AREAS = ["Desenvolvimento e Aprendizagem","Desenvolvimento","Aprendizagem","Cultura"];
+const CAT_ORDER = ["Workplace","Extra - Licenças","Extra - Movel","Extra - Ramal","Extra - VC","Extra - CATV","Extra - TV"];
+
+let CATALOG = EMBEDDED_CATALOG;
+let people = [];
+let backendConnected = false;
+let curArea = "";
+let curCategory = "";
+let viewMode = "list";
+let pidCounter = 1000;
+let itemModalCtx = null;
+let quickAddCatId = null;
+
+function isGasConfigured(){
+  return typeof GAS_URL === 'string' && GAS_URL.indexOf('http') === 0;
+}
+function loadOfflineSnapshot(){
+  CATALOG = EMBEDDED_CATALOG;
+  people = JSON.parse(JSON.stringify(EMBEDDED_PEOPLE));
+  backendConnected = false;
+}
+async function initApp(){
+  if(isGasConfigured()){
+    try{
+      const res = await fetch(GAS_URL + '?action=list');
+      const data = await res.json();
+      if(data && Array.isArray(data.people) && Array.isArray(data.catalog)){
+        CATALOG = data.catalog;
+        people = data.people;
+        backendConnected = true;
+      } else {
+        throw new Error(data && data.error ? data.error : 'resposta inválida da planilha');
+      }
+    }catch(err){
+      console.error('Falha ao conectar à planilha:', err);
+      loadOfflineSnapshot();
+      showToast('Não consegui conectar à planilha — usando dados locais.');
+    }
+  } else {
+    loadOfflineSnapshot();
+  }
+  updateConnBadge();
+  render();
+}
+function updateConnBadge(){
+  const b = document.getElementById('connBadge');
+  const rl = document.getElementById('resetBtnLabel');
+  if(backendConnected){
+    b.textContent = '● Conectado à planilha — salva automaticamente';
+    b.className = 'conn-badge on';
+    if(rl) rl.textContent = 'Recarregar da planilha';
+  } else {
+    b.textContent = '○ Modo local — nada é salvo entre sessões';
+    b.className = 'conn-badge off';
+    if(rl) rl.textContent = 'Restaurar original';
+  }
+}
+function gasPost(action, body){
+  if(!backendConnected) return Promise.resolve(null);
+  return fetch(GAS_URL + '?action=' + action, { method:'POST', body: JSON.stringify(body) })
+    .then(r=>r.json())
+    .then(res=>{ if(res && res.error){ console.error(res.error); showToast('Erro ao salvar na planilha: '+res.error); } return res; })
+    .catch(err=>{ console.error(err); showToast('Erro de conexão ao salvar na planilha.'); return null; });
+}
+
+const fmt = n => "R$ " + (n||0).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
+const fmt2 = n => "R$ " + (n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const catById = id => CATALOG.find(c=>c.id===id);
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+/* ============================================================
+   CÁLCULOS
+   ============================================================ */
+function personTotals(p){
+  let v26=0,v27=0;
+  p.itens.forEach(it=>{ const c=catById(it.catId); if(c){v26+=c.v26; v27+=c.v27;} });
+  return {v26,v27};
+}
+function areaTotals(area){
+  let v26=0,v27=0,pcount=0,icount=0;
+  people.filter(p=>p.area===area).forEach(p=>{
+    pcount++;
+    const t=personTotals(p);
+    v26+=t.v26; v27+=t.v27; icount+=p.itens.length;
+  });
+  return {v26,v27,pcount,icount};
+}
+function grandTotals(){
+  let v26=0,v27=0,icount=0;
+  people.forEach(p=>{ const t=personTotals(p); v26+=t.v26; v27+=t.v27; icount+=p.itens.length; });
+  return {v26,v27,pcount:people.length,icount};
+}
+
+/* ============================================================
+   RENDER — header
+   ============================================================ */
+function renderKpis(){
+  const g = grandTotals();
+  document.getElementById('kpiTotal26').textContent = fmt(g.v26);
+  document.getElementById('kpiTotal27').textContent = fmt(g.v27);
+  document.getElementById('tbMeta').innerHTML = `<b>${g.pcount}</b> pessoas · <b>${g.icount}</b> itens · <b>${AREAS.filter(a=>areaTotals(a).pcount>0).length}</b> áreas`;
+
+  const delta = g.v27 - g.v26;
+  const pct = g.v26 ? (delta/g.v26*100) : 0;
+  const de = document.getElementById('kpiDelta');
+  if(Math.abs(delta) < 0.5){ de.className='hk-delta flat'; de.textContent='sem variação'; }
+  else if(delta>0){ de.className='hk-delta up'; de.textContent='▲ +'+pct.toFixed(1)+'%'; }
+  else { de.className='hk-delta down'; de.textContent='▼ '+pct.toFixed(1)+'%'; }
+}
+
+/* ============================================================
+   RENDER — tabs
+   ============================================================ */
+function renderAreaTabs(){
+  const box = document.getElementById('areaTabs');
+  const search = document.getElementById('searchInput');
+  if(viewMode==='catalog'){
+    search.placeholder = 'Buscar ferramenta...';
+    const total = CATALOG.length;
+    let html = `<button class="area-tab ${curCategory===''?'active':''}" onclick="setCategory('')">Todas <span class="cnt">${total}</span></button>`;
+    CAT_ORDER.forEach(ind=>{
+      const items = CATALOG.filter(c=>c.indicador===ind);
+      if(!items.length) return;
+      html += `<button class="area-tab ${curCategory===ind?'active':''}" onclick="setCategory('${esc(ind)}')">${esc(items[0].catLabelShort)} <span class="cnt">${items.length}</span></button>`;
+    });
+    box.innerHTML = html;
+    return;
+  }
+  search.placeholder = 'Buscar por nome ou cargo...';
+  const total = people.length;
+  let html = `<button class="area-tab ${curArea===''?'active':''}" onclick="setArea('')">Todas <span class="cnt">${total}</span></button>`;
+  AREAS.forEach(a=>{
+    const n = people.filter(p=>p.area===a).length;
+    html += `<button class="area-tab ${curArea===a?'active':''}" onclick="setArea('${esc(a)}')">${esc(a)} <span class="cnt">${n}</span></button>`;
+  });
+  box.innerHTML = html;
+}
+function setArea(a){ curArea=a; render(); }
+function setCategory(c){ curCategory=c; render(); }
+function setViewMode(m){
+  viewMode=m;
+  document.getElementById('vtCards').classList.toggle('active', m==='cards');
+  document.getElementById('vtList').classList.toggle('active', m==='list');
+  document.getElementById('vtCatalog').classList.toggle('active', m==='catalog');
+  render();
+}
+
+/* ============================================================
+   RENDER — corpo principal
+   ============================================================ */
+function matchesSearch(p, q){
+  if(!q) return true;
+  q=q.toLowerCase();
+  return (p.nome||'').toLowerCase().includes(q) || (p.cargo||'').toLowerCase().includes(q);
+}
+function emptyState(title, sub){
+  return `<div class="empty-state"><div class="es-icon">·</div><div class="es-title">${esc(title)}</div><div>${esc(sub)}</div></div>`;
+}
+
+function render(){
+  renderKpis();
+  renderAreaTabs();
+  const q = document.getElementById('searchInput').value.trim();
+  const wrap = document.getElementById('mainWrap');
+
+  if(viewMode==='catalog'){ renderCatalogView(wrap, q); return; }
+
+  let areasToShow = curArea ? [curArea] : AREAS;
+  let visiblePeople = people.filter(p=> (curArea? p.area===curArea : true) && matchesSearch(p,q));
+
+  if(visiblePeople.length===0){
+    wrap.innerHTML = emptyState('Nenhuma pessoa encontrada','Ajuste o filtro de área ou o termo de busca.');
+    return;
+  }
+  if(viewMode==='list') renderListView(wrap, visiblePeople);
+  else renderCardsView(wrap, areasToShow, q);
+}
+
+function renderCardsView(wrap, areasToShow, q){
+  let html=`<div class="hint-line">Arraste um cartão para outra área para mover a pessoa — ou use o seletor de área dentro do cartão.</div>`;
+  areasToShow.forEach(area=>{
+    const areaPeople = people.filter(p=>p.area===area && matchesSearch(p,q));
+    if(!areaPeople.length) return;
+    const t = areaTotals(area);
+    html += `<div class="area-section" data-area="${esc(area)}">
+      <div class="area-head" onclick="toggleAreaSection(this)">
+        <svg class="area-chevron" width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#9297A8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="area-name">${esc(area)}</span>
+        <span class="area-count">${t.pcount} pessoa${t.pcount!==1?'s':''} · ${t.icount} itens</span>
+        <div class="area-money">
+          <span>2026 <span class="m-val tabnum">${fmt(t.v26)}</span></span>
+          <span>2027 <span class="m-val y27 tabnum">${fmt(t.v27)}</span></span>
+        </div>
+      </div>
+      <div class="area-divider"></div>
+      <div class="people-grid" data-area="${esc(area)}" ondragover="onGridDragOver(event)" ondragleave="onGridDragLeave(event)" ondrop="onGridDrop(event)">${areaPeople.map(p=>personCardHtml(p)).join('')}</div>
+    </div>`;
+  });
+  wrap.innerHTML = html;
+}
+
+function personCardHtml(p){
+  const t = personTotals(p);
+  const delta = t.v27 - t.v26;
+  let deltaClass='', deltaTxt='';
+  if(Math.abs(delta)>0.5){ deltaClass=delta>0?'up':'down'; deltaTxt=(delta>0?'+':'')+fmt(delta)+' vs 2026'; }
+
+  const itemsHtml = p.itens.length ? p.itens.map(it=>{
+    const c = catById(it.catId);
+    const name = c? c.label : (it.label||'Item');
+    const showV26 = c && Math.abs(c.v26-c.v27)>0.5;
+    return `<div class="item-row">
+      <span class="item-name" title="${esc(name)}">${esc(name)}</span>
+      ${showV26?`<span class="item-v26 tabnum">${fmt(c.v26)}</span>`:''}
+      <span class="item-v27 tabnum">${c?fmt(c.v27):'—'}</span>
+      <span class="item-actions">
+        <button class="mini-btn" title="Trocar" onclick="openEditItem('${p.id}','${it.id}')"><svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="mini-btn del" title="Remover" onclick="removeItem('${p.id}','${it.id}')"><svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      </span>
+    </div>`;
+  }).join('') : `<div class="item-empty">Nenhuma ferramenta atribuída.</div>`;
+
+  return `<div class="pcard" data-pid="${p.id}" draggable="true" ondragstart="onCardDragStart(event,'${p.id}')" ondragend="onCardDragEnd(event)">
+    <div class="pcard-head">
+      <span class="pcard-drag-handle" title="Arraste para mover de área">⠿</span>
+      <div class="pcard-id">
+        <span class="pcard-name" title="${esc(p.nome)}">${esc(p.nome||'(sem nome)')}</span>
+        <span class="pcard-cargo" title="${esc(p.cargo||'')}">${esc(p.cargo||'')}</span>
+      </div>
+      <button class="pcard-del" title="Remover pessoa" onclick="removePerson('${p.id}')">remover</button>
+    </div>
+    <select class="area-select" onchange="changeArea('${p.id}', this.value)">
+      ${AREAS.map(a=>`<option value="${esc(a)}" ${a===p.area?'selected':''}>${esc(a)}</option>`).join('')}
+    </select>
+    <div class="item-list">${itemsHtml}</div>
+    <button class="pcard-add" onclick="openAddItem('${p.id}')">+ adicionar ferramenta</button>
+    <div class="pcard-foot">
+      <span class="f-label">Total 2027 <span class="pcard-delta ${deltaClass}">${deltaTxt}</span></span>
+      <span class="f-val tabnum">${fmt(t.v27)}</span>
+    </div>
+  </div>`;
+}
+function toggleAreaSection(headEl){ headEl.parentElement.classList.toggle('collapsed'); }
+
+/* ---- Drag & drop de cartões entre áreas ---- */
+let draggedPersonId = null;
+function onCardDragStart(e, pid){
+  draggedPersonId = pid;
+  e.dataTransfer.effectAllowed = 'move';
+  try{ e.dataTransfer.setData('text/plain', pid); }catch(err){}
+  setTimeout(()=>{ const el=document.querySelector(`.pcard[data-pid="${pid}"]`); if(el) el.classList.add('dragging'); }, 0);
+}
+function onCardDragEnd(e){
+  document.querySelectorAll('.pcard.dragging').forEach(el=>el.classList.remove('dragging'));
+  document.querySelectorAll('.people-grid.drag-over').forEach(el=>el.classList.remove('drag-over'));
+  draggedPersonId = null;
+}
+function onGridDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+function onGridDragLeave(e){
+  if(e.currentTarget === e.target) e.currentTarget.classList.remove('drag-over');
+}
+function onGridDrop(e){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const area = e.currentTarget.getAttribute('data-area');
+  const pid = draggedPersonId || e.dataTransfer.getData('text/plain');
+  if(pid && area){
+    const p = people.find(x=>x.id===pid);
+    if(p && p.area!==area){
+      p.area=area;
+      showToast(p.nome.split(' ')[0]+' movido para "'+area+'". ✓');
+      render();
+      gasPost('upsertPerson', {id:p.id, nome:p.nome, cargo:p.cargo, email:p.email, area:p.area});
+    }
+  }
+}
+
+function renderListView(wrap, visiblePeople){
+  let rows = [];
+  visiblePeople.forEach(p=>{
+    if(p.itens.length===0) rows.push({p, it:null});
+    else p.itens.forEach(it=> rows.push({p, it}));
+  });
+  rows.sort((a,b)=> (a.p.area+a.p.nome).localeCompare(b.p.area+b.p.nome));
+
+  let body = rows.map(({p,it})=>{
+    const c = it? catById(it.catId) : null;
+    if(!it){
+      return `<tr>
+        <td class="badge-area">${esc(p.area)}</td>
+        <td class="name-cargo"><b>${esc(p.nome)}</b><div>${esc(p.cargo||'')}</div></td>
+        <td colspan="3" style="color:var(--ink-faint);font-style:italic">Nenhuma ferramenta atribuída</td>
+        <td></td>
+      </tr>`;
+    }
+    return `<tr>
+      <td class="badge-area">${esc(p.area)}</td>
+      <td class="name-cargo"><b>${esc(p.nome)}</b><div>${esc(p.cargo||'')}</div></td>
+      <td class="badge-cat">${c?esc(c.catLabelShort):''}</td>
+      <td>${c?esc(c.label):esc(it.label||'')}</td>
+      <td class="tc-right v27 tabnum">${c?fmt(c.v27):'—'}</td>
+      <td>
+        <span class="item-actions" style="justify-content:flex-end;width:auto">
+          <button class="mini-btn" title="Trocar" onclick="openEditItem('${p.id}','${it.id}')"><svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="mini-btn del" title="Remover" onclick="removeItem('${p.id}','${it.id}')"><svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+        </span>
+      </td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `<div class="table-wrap"><table class="full">
+    <thead><tr>
+      <th style="width:160px">Área</th><th style="width:200px">Pessoa</th><th style="width:130px">Categoria</th><th>Ferramenta / Item</th>
+      <th class="tc-right" style="width:90px">2027</th><th style="width:60px"></th>
+    </tr></thead>
+    <tbody>${body}</tbody>
+  </table></div>`;
+}
+
+/* ============================================================
+   AÇÕES — pessoa
+   ============================================================ */
+function changeArea(pid, area){
+  const p = people.find(x=>x.id===pid);
+  if(p){
+    p.area=area;
+    showToast('Área atualizada. ✓');
+    render();
+    gasPost('upsertPerson', {id:p.id, nome:p.nome, cargo:p.cargo, email:p.email, area:p.area});
+  }
+}
+function removePerson(pid){
+  const p = people.find(x=>x.id===pid);
+  if(!p) return;
+  showConfirm('Remover pessoa', `Remover "${p.nome}" e suas ferramentas?`, ()=>{
+    people = people.filter(x=>x.id!==pid);
+    showToast('Pessoa removida. ✓');
+    render();
+    gasPost('deletePerson', {id:pid});
+  });
+}
+function openAddPerson(){
+  document.getElementById('np-nome').value='';
+  document.getElementById('np-cargo').value='';
+  document.getElementById('np-email').value='';
+  const sel = document.getElementById('np-area');
+  sel.innerHTML = AREAS.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
+  sel.value = curArea || AREAS[0];
+  document.getElementById('ovPerson').classList.add('open');
+  setTimeout(()=>document.getElementById('np-nome').focus(),80);
+}
+function savePerson(){
+  const nome = document.getElementById('np-nome').value.trim();
+  if(!nome){ showToast('Informe o nome da pessoa.'); return; }
+  const cargo = document.getElementById('np-cargo').value.trim();
+  const email = document.getElementById('np-email').value.trim();
+  const area = document.getElementById('np-area').value;
+  const id = 'p_new'+(pidCounter++)+Math.random().toString(36).slice(2,6);
+  people.push({id, nome, cargo, email, area, itens:[]});
+  closeOv('ovPerson');
+  showToast('Pessoa adicionada. ✓');
+  render();
+  gasPost('upsertPerson', {id, nome, cargo, email, area});
+}
+
+/* ============================================================
+   AÇÕES — item
+   ============================================================ */
+function categoriesList(){
+  const seen = {};
+  CATALOG.forEach(c=>{ seen[c.indicador]=c.catLabel; });
+  return CAT_ORDER.filter(k=>seen[k]).map(k=>[k,seen[k]]);
+}
+function openAddItem(pid){
+  itemModalCtx = {personId: pid, itemId: null};
+  document.getElementById('itemModalTitle').textContent='Adicionar ferramenta';
+  const p = people.find(x=>x.id===pid);
+  document.getElementById('itemModalSub').textContent = p? p.nome : '';
+  const catSel = document.getElementById('it-cat');
+  catSel.innerHTML = categoriesList().map(([ind,label])=>`<option value="${esc(ind)}">${esc(label)}</option>`).join('');
+  fillCatalogSelect();
+  document.getElementById('ovItem').classList.add('open');
+}
+function openEditItem(pid, itemId){
+  const p = people.find(x=>x.id===pid);
+  const it = p.itens.find(x=>x.id===itemId);
+  if(!it) return;
+  itemModalCtx = {personId: pid, itemId};
+  document.getElementById('itemModalTitle').textContent='Trocar ferramenta';
+  document.getElementById('itemModalSub').textContent = p.nome;
+  const c = catById(it.catId);
+  const catSel = document.getElementById('it-cat');
+  catSel.innerHTML = categoriesList().map(([ind,label])=>`<option value="${esc(ind)}">${esc(label)}</option>`).join('');
+  if(c) catSel.value = c.indicador;
+  fillCatalogSelect(it.catId);
+  document.getElementById('ovItem').classList.add('open');
+}
+function fillCatalogSelect(selectedId){
+  const ind = document.getElementById('it-cat').value;
+  const items = CATALOG.filter(c=>c.indicador===ind);
+  const groups = {};
+  items.forEach(c=>{ (groups[c.grupo]=groups[c.grupo]||[]).push(c); });
+  const sel = document.getElementById('it-catalog');
+  let html='';
+  Object.keys(groups).sort().forEach(g=>{
+    html += `<optgroup label="${esc(g)}">`;
+    groups[g].forEach(c=>{ html += `<option value="${esc(c.id)}">${esc(c.label)} — ${fmt2(c.v27)}</option>`; });
+    html += `</optgroup>`;
+  });
+  sel.innerHTML = html;
+  if(selectedId) sel.value = selectedId;
+  updateItemPreview();
+  sel.onchange = updateItemPreview;
+}
+function updateItemPreview(){
+  const id = document.getElementById('it-catalog').value;
+  const c = catById(id);
+  const prev = document.getElementById('it-preview');
+  if(c){ prev.style.display='block'; document.getElementById('it-prev26').textContent=fmt2(c.v26); document.getElementById('it-prev27').textContent=fmt2(c.v27); }
+  else prev.style.display='none';
+}
+function saveItem(){
+  const catId = document.getElementById('it-catalog').value;
+  if(!catId){ showToast('Selecione uma ferramenta.'); return; }
+  const p = people.find(x=>x.id===itemModalCtx.personId);
+  if(!p) return;
+  if(itemModalCtx.itemId){
+    const it = p.itens.find(x=>x.id===itemModalCtx.itemId);
+    it.catId = catId;
+    showToast('Ferramenta atualizada. ✓');
+    closeOv('ovItem');
+    render();
+    gasPost('upsertItem', {id: it.id, personId: p.id, catId});
+  } else {
+    const newId = p.id+'_new'+(Math.random().toString(36).slice(2,7));
+    p.itens.push({id:newId, catId, label:'', detalhe:''});
+    showToast('Ferramenta adicionada. ✓');
+    closeOv('ovItem');
+    render();
+    gasPost('upsertItem', {id:newId, personId:p.id, catId});
+  }
+}
+function removeItem(pid, itemId){
+  const p = people.find(x=>x.id===pid);
+  if(!p) return;
+  const it = p.itens.find(x=>x.id===itemId);
+  const c = it? catById(it.catId):null;
+  showConfirm('Remover ferramenta', `Remover "${c?c.label:(it&&it.label)||'este item'}" de ${p.nome}?`, ()=>{
+    p.itens = p.itens.filter(x=>x.id!==itemId);
+    showToast('Ferramenta removida. ✓');
+    render();
+    gasPost('deleteItem', {id:itemId});
+  });
+}
+
+/* ============================================================
+   RENDER — Catálogo
+   ============================================================ */
+function matchesCatalogSearch(c, q){
+  if(!q) return true;
+  q=q.toLowerCase();
+  return (c.label||'').toLowerCase().includes(q) || (c.catLabel||'').toLowerCase().includes(q) || (c.grupo||'').toLowerCase().includes(q);
+}
+function renderCatalogView(wrap, q){
+  let items = CATALOG.filter(c=> (curCategory? c.indicador===curCategory : true) && matchesCatalogSearch(c,q));
+  if(!items.length){ wrap.innerHTML = emptyState('Nenhuma ferramenta encontrada','Ajuste o filtro de categoria ou o termo de busca.'); return; }
+
+  const groups = {};
+  items.forEach(c=>{ (groups[c.indicador]=groups[c.indicador]||[]).push(c); });
+  const order = curCategory ? [curCategory] : CAT_ORDER.filter(o=>groups[o]);
+
+  let html = `<div class="hint-line">${items.length} ferramentas do catálogo oficial de custos. Passe o mouse numa linha para <b>Atribuir</b> a uma pessoa.</div>`;
+
+  order.forEach(ind=>{
+    const list = groups[ind].slice().sort((a,b)=> a.label.localeCompare(b.label));
+    html += `<div class="cat-group">
+      <div class="cat-group-head">${esc(list[0].catLabel)} <span class="cnt">${list.length} itens</span></div>
+      <div class="table-wrap">
+        <table class="full">
+          <thead><tr>
+            <th style="width:110px">Grupo</th>
+            <th>Ferramenta / Item</th>
+            <th class="tc-right" style="width:100px">Valor 2026</th>
+            <th class="tc-right" style="width:100px">Valor 2027</th>
+            <th style="width:90px"></th>
+          </tr></thead>
+          <tbody>
+            ${list.map(c=>`<tr>
+              <td class="badge-cat">${esc(c.grupo)}</td>
+              <td>${esc(c.label)}</td>
+              <td class="tc-right tabnum">${fmt2(c.v26)}</td>
+              <td class="tc-right v27 tabnum">${fmt2(c.v27)}</td>
+              <td><span class="cat-row-add"><button class="btn btn-sm btn-ghost" onclick="openQuickAdd('${esc(c.id)}')">Atribuir</button></span></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  });
+  wrap.innerHTML = html;
+}
+function openQuickAdd(catId){
+  const c = catById(catId);
+  if(!c) return;
+  quickAddCatId = catId;
+  document.getElementById('qa-item-name').textContent = c.label + ' · ' + c.catLabel;
+  document.getElementById('qa-prev26').textContent = fmt2(c.v26);
+  document.getElementById('qa-prev27').textContent = fmt2(c.v27);
+  const sel = document.getElementById('qa-person');
+  const sorted = people.slice().sort((a,b)=> (a.area+a.nome).localeCompare(b.area+b.nome));
+  sel.innerHTML = sorted.map(p=>`<option value="${esc(p.id)}">${esc(p.nome)} — ${esc(p.area)}</option>`).join('') || `<option value="">Nenhuma pessoa cadastrada</option>`;
+  document.getElementById('ovQuickAdd').classList.add('open');
+}
+function confirmQuickAdd(){
+  const pid = document.getElementById('qa-person').value;
+  const p = people.find(x=>x.id===pid);
+  if(!p || !quickAddCatId){ showToast('Selecione uma pessoa.'); return; }
+  const newId = p.id+'_qa'+(Math.random().toString(36).slice(2,7));
+  p.itens.push({id:newId, catId:quickAddCatId, label:'', detalhe:''});
+  closeOv('ovQuickAdd');
+  showToast('Ferramenta atribuída a '+p.nome+'. ✓');
+  render();
+  gasPost('upsertItem', {id:newId, personId:p.id, catId:quickAddCatId});
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+function confirmReset(){
+  if(backendConnected){
+    showConfirm('Recarregar da planilha', 'Isso busca os dados mais recentes salvos na planilha (útil se outra pessoa também estiver editando). Continuar?', async ()=>{
+      await initApp();
+      showToast('Dados recarregados da planilha. ✓');
+    });
+  } else {
+    showConfirm('Restaurar cenário original', 'Todas as alterações desta sessão serão perdidas (modo local, sem planilha conectada). Deseja continuar?', ()=>{
+      loadOfflineSnapshot();
+      showToast('Cenário original restaurado. ✓');
+      updateConnBadge();
+      render();
+    });
+  }
+}
+
+/* ============================================================
+   Modais utilitários
+   ============================================================ */
+function ovClick(e,id){ if(e.target.id===id) closeOv(id); }
+function closeOv(id){ document.getElementById(id).classList.remove('open'); }
+function showConfirm(title, sub, onConfirm){
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmSub').textContent = sub;
+  const btn = document.getElementById('confirmBtn');
+  const newBtn = btn.cloneNode(true);
+  btn.parentNode.replaceChild(newBtn, btn);
+  newBtn.addEventListener('click', ()=>{ closeOv('ovConfirm'); onConfirm(); });
+  document.getElementById('ovConfirm').classList.add('open');
+}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+/* ============================================================
+   EXPORTAÇÃO EXCEL
+   ============================================================ */
+function round2(n){ return Math.round((n||0)*100)/100; }
+function exportExcel(){
+  try{
+    const wb = XLSX.utils.book_new();
+    const rows = [];
+    people.forEach(p=>{
+      if(p.itens.length===0){
+        rows.push({"Área":p.area,"Nome":p.nome,"Cargo":p.cargo||'',"Email":p.email||'',"Categoria":"","Ferramenta/Item":"","Valor 2026":0,"Valor 2027":0});
+        return;
+      }
+      p.itens.forEach(it=>{
+        const c = catById(it.catId);
+        rows.push({"Área":p.area,"Nome":p.nome,"Cargo":p.cargo||'',"Email":p.email||'',
+          "Categoria": c? c.indicador : (it.label||''), "Ferramenta/Item": c? c.label : (it.label||''),
+          "Valor 2026": c? c.v26 : 0, "Valor 2027": c? c.v27 : 0});
+      });
+    });
+    const ws1 = XLSX.utils.json_to_sheet(rows);
+    ws1['!cols'] = [{wch:26},{wch:26},{wch:26},{wch:26},{wch:20},{wch:38},{wch:12},{wch:12}];
+    XLSX.utils.book_append_sheet(wb, ws1, "Cenário 2027");
+
+    const resumoPessoa = people.map(p=>{
+      const t = personTotals(p);
+      return {"Área":p.area,"Nome":p.nome,"Cargo":p.cargo||'',"Qtd. Itens":p.itens.length,"Valor 2026":round2(t.v26),"Valor 2027":round2(t.v27),"Variação (R$)":round2(t.v27-t.v26)};
+    });
+    const ws2 = XLSX.utils.json_to_sheet(resumoPessoa);
+    ws2['!cols'] = [{wch:26},{wch:26},{wch:26},{wch:10},{wch:12},{wch:12},{wch:13}];
+    XLSX.utils.book_append_sheet(wb, ws2, "Resumo por Pessoa");
+
+    const resumoArea = AREAS.map(a=>{
+      const t = areaTotals(a);
+      return {"Área":a,"Pessoas":t.pcount,"Itens":t.icount,"Valor 2026":round2(t.v26),"Valor 2027":round2(t.v27),"Variação (R$)":round2(t.v27-t.v26)};
+    });
+    const g = grandTotals();
+    resumoArea.push({"Área":"TOTAL GERAL","Pessoas":g.pcount,"Itens":g.icount,"Valor 2026":round2(g.v26),"Valor 2027":round2(g.v27),"Variação (R$)":round2(g.v27-g.v26)});
+    const ws3 = XLSX.utils.json_to_sheet(resumoArea);
+    ws3['!cols'] = [{wch:30},{wch:10},{wch:8},{wch:13},{wch:13},{wch:14}];
+    XLSX.utils.book_append_sheet(wb, ws3, "Resumo por Área");
+
+    const catRows = CATALOG.map(c=>({"Categoria":c.indicador,"Item":c.label,"Valor 2026":c.v26,"Valor 2027":c.v27}));
+    const ws4 = XLSX.utils.json_to_sheet(catRows);
+    ws4['!cols'] = [{wch:20},{wch:45},{wch:12},{wch:12}];
+    XLSX.utils.book_append_sheet(wb, ws4, "Catálogo de Custos");
+
+    const stamp = new Date().toISOString().slice(0,10);
+    XLSX.writeFile(wb, `Orcamento_Tec_2027_D_A_Cultura_${stamp}.xlsx`);
+    showToast('Excel exportado! Importe no Google Sheets quando quiser. ✓');
+  }catch(err){
+    console.error(err);
+    showToast('Erro ao exportar: '+err.message);
+  }
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+initApp();
+</script>
+</body>
+</html>
